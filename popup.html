@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>Search Randomly Extension</title>
-    <link rel="stylesheet" type="text/css" href="popup.css">
+    <title>Bing Searcher</title>
+    <link rel="stylesheet" type="text/css" href="popup.css" />
+    <script src="popup.js"></script>
   </head>
   <body>
-    <h1>Search Randomly Extension</h1>
+    <h1>Bing Searcher</h1>
     <form id="search-form">
-      <label for="search-type">Search Type:</label>
-      <select id="search-type" name="search-type">
+      <label for="num-searches">Number of searches:</label>
+      <input
+        type="number"
+        id="num-searches"
+        name="num-searches"
+        min="1"
+        max="100"
+        value="5"
+        required
+      />
+      <label for="search-type">Search type:</label>
+      <select id="search-type" name="search-type" required>
         <option value="desktop">Desktop</option>
         <option value="mobile">Mobile</option>
-      </select>
-      <br>
-      <label for="num-searches">Number of Searches:</label>
-      <input type="number" id="num-searches" name="num-searches" min="1" max="100">
-      <br>
-      <button type="submit" id="search-btn">Search</button>
+      </select> <br>
+      <button type="submit">Start</button> &nbsp;
+      <button type="button" id="stop-button">Stop</button>
     </form>
-    <script src="popup.js"></script>
   </body>
 </html>
