@@ -6,8 +6,10 @@ function performSearches(numSearches, searchType) {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = navigator.userAgent;
   } else if (searchType === "mobile") {
+    // searchUrl =
+    //   "https://www.bing.com/search?q=&qs=n&form=QBRE&sp=-1&pq=&sc=8-0&sk=&cvid=&first=1&mkt=en-US";
     searchUrl =
-      "https://www.bing.com/search?q=&qs=n&form=QBRE&sp=-1&pq=&sc=8-0&sk=&cvid=&first=1&mkt=en-US";
+      "https://www.bing.com/search?q";
       userAgent =
         "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1";
   } else {
