@@ -1,17 +1,14 @@
 var intervalId;
+var userAgent;
+
 function performSearches(numSearches, searchType) {
   var searchUrl;
-  var userAgent;
   if (searchType === "desktop") {
     searchUrl = "https://www.bing.com/search?q=";
-    userAgent = navigator.userAgent;
+    userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
   } else if (searchType === "mobile") {
-    // searchUrl =
-    //   "https://www.bing.com/search?q=&qs=n&form=QBRE&sp=-1&pq=&sc=8-0&sk=&cvid=&first=1&mkt=en-US";
-    searchUrl =
-      "https://www.bing.com/search?q";
-      userAgent =
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1";
+    searchUrl = "https://www.bing.com/search?q=";
+    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1";
   } else {
     console.error("Invalid search type: " + searchType);
     return;
@@ -34,6 +31,7 @@ function performSearches(numSearches, searchType) {
     prevSearches.push(searchTerm);
 
     var url = searchUrl + encodeURIComponent(searchTerm);
+
     chrome.tabs.update({ url: url }, function (tab) {
       console.log("Searching for: " + searchTerm);
     });
@@ -41,15 +39,6 @@ function performSearches(numSearches, searchType) {
     searchCount++;
   }, 1000);
 }
-
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.type === "start-searches") {
-    performSearches(message.numSearches, message.searchType);
-  } else if (message.type === "stop-searches") {
-    clearInterval(intervalId);
-    console.log("Stopped performing searches.");
-  }
-});
 
 function generateSearchTerm() {
   var adjectives = [
@@ -74,7 +63,7 @@ function generateSearchTerm() {
     "cowardly",
     "brave",
     "groovy",
-    
+    "abrupt"
   ];
   var nouns = [
     "dog",
@@ -87,6 +76,7 @@ function generateSearchTerm() {
     "piano",
     "jungle",
     "mountain",
+    "tulu",
     "ron",
     "sagar",
     "bipin",
@@ -95,8 +85,9 @@ function generateSearchTerm() {
     "game",
     "valo",
     "rohan",
+    "tulasha",
     "rito",
-    "video",
+    "video"
   ];
 
   var adjIndex = Math.floor(Math.random() * adjectives.length);
@@ -104,3 +95,27 @@ function generateSearchTerm() {
 
   return adjectives[adjIndex] + " " + nouns[nounIndex];
 }
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.type === "start-searches") {
+    performSearches(message.numSearches, message.searchType);
+  } else if (message.type === "stop-searches") {
+    clearInterval(intervalId);
+    console.log("Stopped performing searches.");
+  }
+});
+
+// add webRequest listener at the end of the file
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  function(details) {
+    for (var i = 0; i < details.requestHeaders.length; ++i) {
+      if (details.requestHeaders[i].name === 'User-Agent') {
+        details.requestHeaders[i].value = userAgent;
+        break;
+      }
+    }
+    return {requestHeaders: details.requestHeaders};
+  },
+  {urls:
+ ["<all_urls>"]},
+  ["blocking", "requestHeaders"]);
