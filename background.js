@@ -1,14 +1,16 @@
 var intervalId;
-var userAgent;
+var desktopUserAgent = navigator.userAgent;
+var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
+var userAgent = navigator.userAgent;
 
 function performSearches(numSearches, searchType) {
   var searchUrl;
   if (searchType === "desktop") {
     searchUrl = "https://www.bing.com/search?q=";
-    userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
+    userAgent = desktopUserAgent;
   } else if (searchType === "mobile") {
     searchUrl = "https://www.bing.com/search?q=";
-    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1";
+    userAgent = mobileUserAgent;
   } else {
     console.error("Invalid search type: " + searchType);
     return;

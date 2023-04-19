@@ -51,7 +51,6 @@ stopButton.addEventListener("click", function (event) {
   if (searchType === "mobile") {
     chrome.webRequest.onBeforeSendHeaders.removeListener(modifyUserAgent);
   }
-
   // Send message to background script to stop searches
   chrome.runtime.sendMessage({ type: "stop-searches" });
 });

@@ -1,6 +1,6 @@
 {
   "name": "Bing Searcher",
-  "version": "3.0",
+  "version": "3.1",
   "manifest_version": 2,
   "description": "Perform multiple random searches on Bing.com for Microsoft Rewards",
   "icons": {
@@ -16,7 +16,8 @@
     "activeTab",
     "tabs",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "https://www.bing.com/"
   ],
   "background": {
     "scripts": ["background.js"],
