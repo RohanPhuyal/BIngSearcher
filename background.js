@@ -21,9 +21,14 @@ function performSearches(numSearches, searchType) {
   intervalId = setInterval(function () {
     if (searchCount >= numSearches) {
       clearInterval(intervalId);
-      // if(searchType === "mobile"){
-
-      // }
+      if(searchType === "mobile"){
+        userAgent = desktopUserAgent;
+        chrome.tabs.update({ url: url }, function (tab) {
+          console.log("Searching for: " + searchTerm);
+          // Close the tab after the search is complete
+          chrome.tabs.remove(tab.id);
+        });
+      }
       console.log("Finished performing searches.");
       return;
     }
