@@ -16,7 +16,7 @@ body {
   
   label {
     color: #bfbfbf;
-    display: block;
+    display: inline-block;
     margin-bottom: 10px;
   }
   
@@ -25,6 +25,11 @@ body {
     border-radius: 3px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
+  }
+  #preceise,#random{
+    color: #bfbfbf;
+    
+    
   }
   
   button[type=submit] {

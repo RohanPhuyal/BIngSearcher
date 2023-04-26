@@ -17,12 +17,22 @@
         max="100"
         value="5"
         required
-      />
-      <label for="search-type">Search type:</label>
+      /> <br>
+      <label for="search-type">Search type:</label> <br>
       <select id="search-type" name="search-type" required>
         <option value="desktop">Desktop</option>
         <option value="mobile">Mobile</option>
       </select> <br>
+      <label for="precise"> 
+        <input type="radio" id="precise" name="search-gen" value="precise">
+        Precise
+      </label>
+      <label for="random">
+        <input type="radio" id="random" name="search-gen" value="random" checked="checked">
+        Random
+      </label>
+      
+      <br>
       <button type="submit">Start</button> &nbsp;
       <button type="button" id="stop-button">Stop</button>
     </form>

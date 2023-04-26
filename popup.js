@@ -2,6 +2,7 @@ var mobileUserAgent =
   "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 var intervalId;
 var searchType;
+var searchGen;
 
 document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("search-form");
@@ -23,6 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     var numSearches = document.getElementById("num-searches").value;
     searchType = document.getElementById("search-type").value;
+    searchGen = document.querySelector('input[name="search-gen"]:checked').value;
+
 
     // Add the webRequest listener if mobile search is selected
     if (searchType === "mobile") {
@@ -38,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
       type: "start-searches",
       numSearches: numSearches,
       searchType: searchType,
+      searchGen: searchGen,
     });
 
     // Store the interval ID so that it can be cleared later
@@ -73,6 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Save the search value to storage
     chrome.storage.sync.set({ lastSearchValue: numSearches });
     // Perform search based on user selection
-    performSearch(numSearches, searchType);
+    // performSearch(numSearches, searchType);
   });
 });
