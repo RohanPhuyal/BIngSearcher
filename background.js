@@ -3,7 +3,6 @@ var desktopUserAgent = navigator.userAgent;
 var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 var userAgent = navigator.userAgent;
 var searchTest=true;
-var result="";
 
 function performSearches(numSearches, searchType, searchGen) {
   console.log(searchGen+" gen gen")
@@ -59,6 +58,7 @@ function performSearches(numSearches, searchType, searchGen) {
 }
 
 function generateString(numSearches){
+  var result="";
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
   if(searchTest){
