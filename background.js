@@ -3,6 +3,8 @@ var desktopUserAgent = navigator.userAgent;
 var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 var userAgent = navigator.userAgent;
 var result="";
+var activeTabId = null; // Store the active tab ID
+
 function performSearches(numSearches, searchType, searchGen) {
   var searchUrl;
   if (searchType === "desktop") {
@@ -47,9 +49,14 @@ function performSearches(numSearches, searchType, searchGen) {
 
     var url = searchUrl + encodeURIComponent(searchTerm);
 
-    chrome.tabs.update({ url: url }, function (tab) {
-      console.log("Searching for: " + searchTerm);
-    });
+    if (activeTabId) {
+      chrome.tabs.update(activeTabId, { url: url }, function (tab) {
+        console.log("Searching for: " + searchTerm);
+        console.log(activeTabId + "ID aile");
+      });
+    } else {
+      console.error("No active tab found.");
+    }
 
     searchCount++;
   }, 1000);
@@ -200,7 +207,16 @@ function generateSearchTerm() {
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  
   if (message.type === "start-searches") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs.length > 0) {
+        activeTabId = tabs[0].id; // Store the tab ID of the active tab
+        performSearches(message.numSearches, message.searchType, message.searchGen);
+      } else {
+        console.error("No active tab found.");
+      }
+    });
     performSearches(message.numSearches, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
     clearInterval(intervalId);
