@@ -68,14 +68,37 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("num-searches").value = data.lastSearchValue;
     }
   });
+  // Retrieve the last value searched by the user (if any)
+  chrome.storage.sync.get("lastTypeValue", function(data) {
+    if (data.lastTypeValue) {
+      document.getElementById("search-type").value = data.lastTypeValue;
+    }
+  });
+  // Retrieve the last value searched by the user (if any)
+  chrome.storage.sync.get("lastMethodValue", function(data) {
+    if (data.lastMethodValue) {
+      var searchGen = data.lastMethodValue;
+      var radioButtons = document.querySelectorAll('input[name="search-gen"]');
+      for (var i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].value === searchGen) {
+          radioButtons[i].checked = true;
+          break;
+        }
+      }
+    }
+  });
+  
 
   // Listen for form submission and save the search value to storage
   document.getElementById("search-form").addEventListener("submit", function(event) {
     event.preventDefault();
     const numSearches = document.getElementById("num-searches").value;
     const searchType = document.getElementById("search-type").value;
+    const searchGen = document.querySelector('input[name="search-gen"]:checked').value;
     // Save the search value to storage
     chrome.storage.sync.set({ lastSearchValue: numSearches });
+    chrome.storage.sync.set({ lastTypeValue: searchType });
+    chrome.storage.sync.set({ lastMethodValue: searchGen });
     // Perform search based on user selection
     // performSearch(numSearches, searchType);
   });

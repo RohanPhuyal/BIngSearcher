@@ -4,7 +4,6 @@ var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537
 var userAgent = navigator.userAgent;
 var result="";
 function performSearches(numSearches, searchType, searchGen) {
-  console.log(searchGen+" gen gen")
   var searchUrl;
   if (searchType === "desktop") {
     searchUrl = "https://www.bing.com/search?q=";
