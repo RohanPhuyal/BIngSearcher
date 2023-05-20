@@ -2,8 +2,7 @@ var intervalId;
 var desktopUserAgent = navigator.userAgent;
 var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 var userAgent = navigator.userAgent;
-var result = "";
-
+var result="";
 function performSearches(numSearches, searchType, searchGen) {
   console.log(searchGen+" gen gen")
   var searchUrl;
@@ -17,12 +16,12 @@ function performSearches(numSearches, searchType, searchGen) {
     console.error("Invalid search type: " + searchType);
     return;
   }
-
   var searchCount = 0;
   var prevSearches = [];
   intervalId = setInterval(function () {
     if (searchCount >= numSearches) {
       clearInterval(intervalId);
+      result="";
       if(searchType === "mobile"){
         userAgent = desktopUserAgent;
       }
@@ -34,7 +33,7 @@ function performSearches(numSearches, searchType, searchGen) {
       var searchTerm = generateSearchTerm();
     }
     else if(searchGen=="random"){
-      var searchTerm = generateString(numSearches,result);
+      var searchTerm = generateString(numSearches);
     }
     else{
       console.log("Error, (Random/Preceise)");
@@ -57,10 +56,10 @@ function performSearches(numSearches, searchType, searchGen) {
   }, 1000);
 }
 
-function generateString(numSearches,result){
+function generateString(numSearches){
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  if(result==""){
+  if(result===""){
       for (var i = 0; i < numSearches; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
@@ -206,6 +205,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     performSearches(message.numSearches, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
     clearInterval(intervalId);
+    result="";
     console.log("Stopped performing searches.");
   }
 });
