@@ -52,7 +52,7 @@ function performSearches(numSearches, searchType, searchGen) {
     if (activeTabId) {
       chrome.tabs.update(activeTabId, { url: url }, function (tab) {
         console.log("Searching for: " + searchTerm);
-        console.log(activeTabId + "ID aile");
+        // console.log(activeTabId + "ID aile");
       });
     } else {
       console.error("No active tab found.");
@@ -212,7 +212,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs.length > 0) {
         activeTabId = tabs[0].id; // Store the tab ID of the active tab
-        performSearches(message.numSearches, message.searchType, message.searchGen);
+        // performSearches(message.numSearches, message.searchType, message.searchGen);
       } else {
         console.error("No active tab found.");
       }
