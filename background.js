@@ -2,7 +2,7 @@ var intervalId;
 var desktopUserAgent = navigator.userAgent;
 var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 var userAgent = navigator.userAgent;
-var searchTest=true;
+var result = "";
 
 function performSearches(numSearches, searchType, searchGen) {
   console.log(searchGen+" gen gen")
@@ -34,7 +34,7 @@ function performSearches(numSearches, searchType, searchGen) {
       var searchTerm = generateSearchTerm();
     }
     else if(searchGen=="random"){
-      var searchTerm = generateString(numSearches);
+      var searchTerm = generateString(numSearches,result);
     }
     else{
       console.log("Error, (Random/Preceise)");
@@ -57,18 +57,16 @@ function performSearches(numSearches, searchType, searchGen) {
   }, 1000);
 }
 
-function generateString(numSearches){
-  var result="";
+function generateString(numSearches,result){
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  if(searchTest){
+  if(result==""){
       for (var i = 0; i < numSearches; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
   }else{
     result=result.slice(0,-1);
   }
-  searchTest=false;
   return result;
 }
 
