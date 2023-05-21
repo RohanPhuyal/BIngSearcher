@@ -99,13 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     chrome.storage.sync.set({ lastSearchValue: numSearches });
     chrome.storage.sync.set({ lastTypeValue: searchType });
     chrome.storage.sync.set({ lastMethodValue: searchGen });
-    // Perform search based on user selection
-    // performSearch(numSearches, searchType);
   });
 
-  // gameButton.addEventListener("click",function (event){
-  //   chrome.runtime.sendMessage({ type: "game-script" });
-  // });
   gameButton.addEventListener('click', function() {
     chrome.tabs.executeScript({
       file: 'contentscript.js'

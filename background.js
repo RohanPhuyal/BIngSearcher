@@ -39,8 +39,6 @@ function performSearches(numSearches, searchType, searchGen) {
     else{
       console.log("Error, (Random/Preceise)");
     }
-    // var searchTerm = generateSearchTerm();
-    // var searchTerm = generateString(numSearches);
     if (prevSearches.includes(searchTerm)) {
       console.log("Skipping duplicate search term: " + searchTerm);
       return;
@@ -222,68 +220,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
-  }else if (message.type === "game-script") {
-    console.log("msn shop");
-    // msnGameScript();
   }
 });
-
-function msnGameScript() {
-  
-  const code = `
-  (function()
-{
-    if(!document.location.href.startsWith("https://www.msn.com/en-us/shopping")){
-        alert("Invalid page!");
-        return;
-    }
-    
-    var shoppingPageChildren = null;
-    try
-    {
-        shoppingPageChildren = document.getElementsByTagName("shopping-page-base")[0].shadowRoot.children[0]
-            .getElementsByTagName("shopping-homepage")[0].shadowRoot.children[0]
-            .getElementsByTagName("msft-feed-layout")[0].shadowRoot.children;
-    }
-    catch(e)
-    {
-        alert("Script error...\nMake sure the page is fully loaded.");
-        return;
-    }
-    
-    var msnShoppingGamePane = null;
-    for(i = 0; i <= shoppingPageChildren.length - 1; i++){
-        if(shoppingPageChildren[i].getAttribute("gamestate") == "active")
-            msnShoppingGamePane = shoppingPageChildren[i];
-    }
-    var answerSelectorInterval = (msnShoppingGamePane == null ? 0 : setInterval(() => 
-    {
-        if(msnShoppingGamePane.gameState == "active" && msnShoppingGamePane.selectedCardIndex != msnShoppingGamePane._correctAnswerIndex)
-            msnShoppingGamePane.selectedCardIndex = msnShoppingGamePane._correctAnswerIndex;
-        
-        if(msnShoppingGamePane._dailyLimitReached){
-            clearInterval(answerSelectorInterval);
-        }
-    }, 500));
-    alert(answerSelectorInterval == 0 ? "Unable to locate shopping game...\nTry scrolling down to it." : "Shopping game located!\nEnjoy :)")
-})();
-`;
-
-chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-  if (tabs.length > 0) {
-    const tabId = tabs[0].id;
-    chrome.tabs.executeScript(tabId, { code });
-  } else {
-    console.error("No active tab found.");
-  }
-});
-
-
-
-  
-}
-
-
 
 // add webRequest listener at the end of the file
 chrome.webRequest.onBeforeSendHeaders.addListener(
