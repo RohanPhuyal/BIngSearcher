@@ -7,6 +7,7 @@ var searchGen;
 document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("search-form");
   var stopButton = document.getElementById("stop-button");
+  var gameButton = document.getElementById("game-button");
 
   // Define the webRequest listener
   function modifyUserAgent(details) {
@@ -25,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var numSearches = document.getElementById("num-searches").value;
     searchType = document.getElementById("search-type").value;
     searchGen = document.querySelector('input[name="search-gen"]:checked').value;
-
 
     // Add the webRequest listener if mobile search is selected
     if (searchType === "mobile") {
@@ -102,4 +102,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // Perform search based on user selection
     // performSearch(numSearches, searchType);
   });
+
+  // gameButton.addEventListener("click",function (event){
+  //   chrome.runtime.sendMessage({ type: "game-script" });
+  // });
+  gameButton.addEventListener('click', function() {
+    chrome.tabs.executeScript({
+      file: 'contentscript.js'
+    });
+  });
+
+
 });
