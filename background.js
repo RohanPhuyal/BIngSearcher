@@ -4,19 +4,45 @@ var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537
 var userAgent = navigator.userAgent;
 var result="";
 var activeTabId = null; // Store the active tab ID
+var searchUrl;
 
-function performSearches(numSearches, searchType, searchGen) {
-  var searchUrl;
+function modeSearch(numSearches, searchType, searchGen){
+  if (searchType === "desktop") {
+    desktopSearch(numSearches,searchType,searchGen);
+  } else if (searchType === "mobile") {
+    mobileSearch(numSearches,searchType,searchGen);
+  }else if(searchType === "desktopmobile"){
+    // performSearches(numSearches,searchType,searchGen);
+  }
+   else {
+    console.error("Invalid search type: " + searchType);
+    return;
+  }
+}
+
+function desktopSearch(numSearches,searchType,searchGen){
   if (searchType === "desktop") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = desktopUserAgent;
-  } else if (searchType === "mobile") {
+  }else {
+    console.error("Invalid search type: " + searchType);
+    return;
+  }
+  actualSearch(numSearches,searchType,searchGen);
+}
+
+function mobileSearch(numSearches,searchType,searchGen){
+  if (searchType === "mobile") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = mobileUserAgent;
   } else {
     console.error("Invalid search type: " + searchType);
     return;
   }
+  actualSearch(numSearches,searchType,searchGen);
+}
+
+function actualSearch(numSearches,searchType,searchGen){
   var searchCount = 0;
   var prevSearches = [];
   intervalId = setInterval(function () {
@@ -215,7 +241,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.error("No active tab found.");
       }
     });
-    performSearches(message.numSearches, message.searchType, message.searchGen);
+    modeSearch(message.numSearches, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
     clearInterval(intervalId);
     result="";

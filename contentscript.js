@@ -19,8 +19,6 @@ function incrementCounter() {
       else{
         scroll.scrollIntoView({behavior: 'smooth'})
       }
-      // document.getElementById("jump_to_this_location").scrollIntoView({behavior: 'smooth'});
-      // document.getElementsByTagName("msn-shopping-game-pane")[0].scrollIntoView({behavior: 'smooth'});
         var s = document.createElement('script');
         s.src = chrome.runtime.getURL('script.js');
         s.onload = function() { this.remove(); };
