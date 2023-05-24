@@ -12,7 +12,7 @@ function modeSearch(numSearches, searchType, searchGen){
   } else if (searchType === "mobile") {
     mobileSearch(numSearches,searchType,searchGen);
   }else if(searchType === "desktopmobile"){
-    // performSearches(numSearches,searchType,searchGen);
+    desktopMobileSearch(numSearches,searchType,searchGen);
   }
    else {
     console.error("Invalid search type: " + searchType);
@@ -42,6 +42,18 @@ function mobileSearch(numSearches,searchType,searchGen){
   actualSearch(numSearches,searchType,searchGen);
 }
 
+function desktopMobileSearch(numSearches,searchType,searchGen){
+  if (searchType === "desktopmobile") {
+    console.log("Executing Desktop and Mobile Search");
+    desktopSearch(numSearches,"desktop",searchGen);
+    mobileSearch(numSearches,"mobile",searchGen);
+  }
+  else {
+    console.error("Invalid search type: " + searchType);
+    return;
+  }
+}
+
 function actualSearch(numSearches,searchType,searchGen){
   var searchCount = 0;
   var prevSearches = [];
@@ -50,6 +62,9 @@ function actualSearch(numSearches,searchType,searchGen){
       clearInterval(intervalId);
       result="";
       if(searchType === "mobile"){
+        userAgent = desktopUserAgent;
+      }
+      if(searchType === "desktopmobile"){
         userAgent = desktopUserAgent;
       }
       console.log("Finished performing searches.");
