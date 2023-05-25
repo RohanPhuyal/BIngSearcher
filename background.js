@@ -3,7 +3,7 @@ var desktopUserAgent = navigator.userAgent;
 var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 var userAgent = navigator.userAgent;
 var result="";
-var activeTabId = null; // Store the active tab ID
+var activeTabId = null;
 var searchUrl;
 var stopSearch = false;
 
@@ -70,7 +70,8 @@ async function mobileSearch(numSearchesD,numSearchesM,searchType, searchGen) {
 async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
   var searchCount = 0;
   var prevSearches = [];
-  var numSearches ;
+  var numSearches=0 ;
+  result="";
   if(searchType==="desktop"){
     numSearches = numSearchesD;
   }else if(searchType==="mobile"){
@@ -83,7 +84,7 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
       var searchTerm = "";
       if(searchType==="desktop"){
         searchTerm = generateString(numSearchesD);
-      }else if(searchType==="desktop"){
+      }else if(searchType==="mobile"){
         searchTerm = generateString(numSearchesM);
       }
       
@@ -97,6 +98,7 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
       if (searchType === "mobile") {
         userAgent = desktopUserAgent;
       }
+      // stopSearch = false;
       console.log("Stopped performing searches.");
       return;
     }
@@ -127,10 +129,16 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
       if (searchType === "mobile") {
         userAgent = desktopUserAgent;
       }
+      stopSearch = false;
       console.log("Finished performing searches.");
       return;
     }
-
+    if(searchType==="desktop"&&searchCount >= numSearches){
+      clearInterval(intervalId);
+      stopSearch = true;
+    }else{
+      stopSearch = false;
+    }
     searchCount++;
     await delay(1000);
   }
