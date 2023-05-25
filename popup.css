@@ -18,10 +18,12 @@ body {
     color: #bfbfbf;
     display: inline-block;
     margin-bottom: 10px;
+    text-align: right;
   }
   
   select, input[type=number] {
     padding: 5px;
+    display: inline-block;
     border-radius: 3px;
     border: 1px solid #ccc;
     margin-bottom: 10px;

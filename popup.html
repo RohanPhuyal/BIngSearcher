@@ -9,12 +9,21 @@
     <h1>Bing Searcher</h1>
     <form id="search-form">
       <label for="num-searches">Number of searches:</label> <br>
-      <input
+      <label>D:</label><input
         type="number"
-        id="num-searches"
-        name="num-searches"
+        id="num-searchesD"
+        name="num-searchesD"
         min="1"
-        max="100"
+        max="50"
+        value="5"
+        required
+      />
+      <label>M:</label><input
+        type="number"
+        id="num-searchesM"
+        name="num-searchesM"
+        min="1"
+        max="50"
         value="5"
         required
       /> <br>

@@ -6,13 +6,13 @@ var result="";
 var activeTabId = null; // Store the active tab ID
 var searchUrl;
 
-function modeSearch(numSearches, searchType, searchGen){
+function modeSearch(numSearchesD,numSearchesM, searchType, searchGen){
   if (searchType === "desktop") {
-    desktopSearch(numSearches,searchType,searchGen);
+    desktopSearch(numSearchesD,searchType,searchGen);
   } else if (searchType === "mobile") {
-    mobileSearch(numSearches,searchType,searchGen);
+    mobileSearch(numSearchesM,searchType,searchGen);
   }else if(searchType === "desktopmobile"){
-    desktopMobileSearch(numSearches,searchType,searchGen);
+    desktopMobileSearch(numSearchesD,numSearchesM,searchType,searchGen);
   }
    else {
     console.error("Invalid search type: " + searchType);
@@ -20,18 +20,42 @@ function modeSearch(numSearches, searchType, searchGen){
   }
 }
 
-function desktopSearch(numSearches,searchType,searchGen){
-  if (searchType === "desktop") {
-    searchUrl = "https://www.bing.com/search?q=";
-    userAgent = desktopUserAgent;
-  }else {
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searchGen) {
+  if (searchType === "desktopmobile") {
+    console.log("Executing Desktop and Mobile Search");
+
+    await desktopSearch(numSearchesD,"desktop" ,searchGen);
+    console.log("Finished performing desktop search.");
+
+    // await delay(numSearchesD * 1000);
+
+    if (numSearchesM > 0) {
+      await mobileSearch(numSearchesM,"mobile", searchGen);
+      console.log("Finished performing mobile search.");
+    }
+  } else {
     console.error("Invalid search type: " + searchType);
     return;
   }
-  actualSearch(numSearches,searchType,searchGen);
 }
 
-function mobileSearch(numSearches,searchType,searchGen){
+
+async function desktopSearch(numSearchesD,searchType,searchGen) {
+  if (searchType === "desktop") {
+    searchUrl = "https://www.bing.com/search?q=";
+    userAgent = desktopUserAgent;
+  } else {
+    console.error("Invalid search type: " + searchType);
+    return;
+  }
+  await actualSearch(numSearchesD, searchType, searchGen);
+}
+
+async function mobileSearch(numSearchesM,searchType, searchGen) {
   if (searchType === "mobile") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = mobileUserAgent;
@@ -39,67 +63,58 @@ function mobileSearch(numSearches,searchType,searchGen){
     console.error("Invalid search type: " + searchType);
     return;
   }
-  actualSearch(numSearches,searchType,searchGen);
+  await actualSearch(numSearchesM, searchType, searchGen);
 }
 
-function desktopMobileSearch(numSearches,searchType,searchGen){
-  if (searchType === "desktopmobile") {
-    console.log("Executing Desktop and Mobile Search");
-    desktopSearch(numSearches,"desktop",searchGen);
-    mobileSearch(numSearches,"mobile",searchGen);
-  }
-  else {
-    console.error("Invalid search type: " + searchType);
-    return;
-  }
-}
-
-function actualSearch(numSearches,searchType,searchGen){
+async function actualSearch(numSearches, searchType, searchGen) {
   var searchCount = 0;
   var prevSearches = [];
-  intervalId = setInterval(function () {
-    if (searchCount >= numSearches) {
-      clearInterval(intervalId);
-      result="";
-      if(searchType === "mobile"){
-        userAgent = desktopUserAgent;
-      }
-      if(searchType === "desktopmobile"){
-        userAgent = desktopUserAgent;
-      }
-      console.log("Finished performing searches.");
+
+  while (searchCount < numSearches) {
+    if (searchGen == "precise") {
+      var searchTerm = generateSearchTerm();
+    } else if (searchGen == "random") {
+      var searchTerm = generateString(numSearches);
+    } else {
+      console.log("Error, (Random/Preceise)");
       return;
     }
 
-    if(searchGen=="precise"){
-      var searchTerm = generateSearchTerm();
-    }
-    else if(searchGen=="random"){
-      var searchTerm = generateString(numSearches);
-    }
-    else{
-      console.log("Error, (Random/Preceise)");
-    }
     if (prevSearches.includes(searchTerm)) {
       console.log("Skipping duplicate search term: " + searchTerm);
-      return;
+      continue;
     }
     prevSearches.push(searchTerm);
 
     var url = searchUrl + encodeURIComponent(searchTerm);
 
     if (activeTabId) {
-      chrome.tabs.update(activeTabId, { url: url }, function (tab) {
-        console.log("Searching for: " + searchTerm);
-        // console.log(activeTabId + "ID aile");
+      await new Promise((resolve) => {
+        chrome.tabs.update(activeTabId, { url: url }, function (tab) {
+          console.log("Searching for: " + searchTerm + " in " + searchType);
+          resolve();
+        });
       });
     } else {
       console.error("No active tab found.");
+      return;
+    }
+
+    if (searchType === "mobile" && searchCount >= numSearches) {
+      clearInterval(intervalId);
+      result = "";
+      if (searchType === "mobile") {
+        userAgent = desktopUserAgent;
+      }
+      console.log("Finished performing searches.");
+      return;
     }
 
     searchCount++;
-  }, 1000);
+    await delay(1000);
+  }
 }
+
 
 function generateString(numSearches){
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -256,7 +271,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.error("No active tab found.");
       }
     });
-    modeSearch(message.numSearches, message.searchType, message.searchGen);
+    modeSearch(message.numSearchesD,message.numSearchesM, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
     clearInterval(intervalId);
     result="";

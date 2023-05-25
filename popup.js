@@ -23,7 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add event listeners
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-    var numSearches = document.getElementById("num-searches").value;
+    var numSearchesD = document.getElementById("num-searchesD").value;
+    var numSearchesM = document.getElementById("num-searchesM").value;
     searchType = document.getElementById("search-type").value;
     searchGen = document.querySelector('input[name="search-gen"]:checked').value;
 
@@ -39,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Send message to background script to start searches
     chrome.runtime.sendMessage({
       type: "start-searches",
-      numSearches: numSearches,
+      numSearchesD: numSearchesD,
+      numSearchesM: numSearchesM,
       searchType: searchType,
       searchGen: searchGen,
     });
@@ -63,9 +65,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Retrieve the last value searched by the user (if any)
-  chrome.storage.sync.get("lastSearchValue", function(data) {
-    if (data.lastSearchValue) {
-      document.getElementById("num-searches").value = data.lastSearchValue;
+  chrome.storage.sync.get("lastSearchValueD", function(data) {
+    if (data.lastSearchValueD) {
+      document.getElementById("num-searchesD").value = data.lastSearchValueD;
+    }
+  });
+  // Retrieve the last value searched by the user (if any)
+  chrome.storage.sync.get("lastSearchValueM", function(data) {
+    if (data.lastSearchValueM) {
+      document.getElementById("num-searchesM").value = data.lastSearchValueM;
     }
   });
   // Retrieve the last value searched by the user (if any)
@@ -92,11 +100,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Listen for form submission and save the search value to storage
   document.getElementById("search-form").addEventListener("submit", function(event) {
     event.preventDefault();
-    const numSearches = document.getElementById("num-searches").value;
+    const numSearchesD = document.getElementById("num-searchesD").value;
+    const numSearchesM = document.getElementById("num-searchesM").value;
     const searchType = document.getElementById("search-type").value;
     const searchGen = document.querySelector('input[name="search-gen"]:checked').value;
     // Save the search value to storage
-    chrome.storage.sync.set({ lastSearchValue: numSearches });
+    chrome.storage.sync.set({ lastSearchValueD: numSearchesD });
+    chrome.storage.sync.set({ lastSearchValueM: numSearchesM });
     chrome.storage.sync.set({ lastTypeValue: searchType });
     chrome.storage.sync.set({ lastMethodValue: searchGen });
   });
