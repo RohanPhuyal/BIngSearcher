@@ -5,12 +5,13 @@ var userAgent = navigator.userAgent;
 var result="";
 var activeTabId = null; // Store the active tab ID
 var searchUrl;
+var stopSearch = false;
 
 function modeSearch(numSearchesD,numSearchesM, searchType, searchGen){
   if (searchType === "desktop") {
-    desktopSearch(numSearchesD,searchType,searchGen);
+    desktopSearch(numSearchesD,numSearchesM,searchType,searchGen);
   } else if (searchType === "mobile") {
-    mobileSearch(numSearchesM,searchType,searchGen);
+    mobileSearch(numSearchesD,numSearchesM,searchType,searchGen);
   }else if(searchType === "desktopmobile"){
     desktopMobileSearch(numSearchesD,numSearchesM,searchType,searchGen);
   }
@@ -28,13 +29,13 @@ async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searc
   if (searchType === "desktopmobile") {
     console.log("Executing Desktop and Mobile Search");
 
-    await desktopSearch(numSearchesD,"desktop" ,searchGen);
+    await desktopSearch(numSearchesD,numSearchesM,"desktop" ,searchGen);
     console.log("Finished performing desktop search.");
 
     // await delay(numSearchesD * 1000);
 
     if (numSearchesM > 0) {
-      await mobileSearch(numSearchesM,"mobile", searchGen);
+      await mobileSearch(numSearchesD,numSearchesM,"mobile", searchGen);
       console.log("Finished performing mobile search.");
     }
   } else {
@@ -44,7 +45,7 @@ async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searc
 }
 
 
-async function desktopSearch(numSearchesD,searchType,searchGen) {
+async function desktopSearch(numSearchesD,numSearchesM,searchType,searchGen) {
   if (searchType === "desktop") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = desktopUserAgent;
@@ -52,10 +53,10 @@ async function desktopSearch(numSearchesD,searchType,searchGen) {
     console.error("Invalid search type: " + searchType);
     return;
   }
-  await actualSearch(numSearchesD, searchType, searchGen);
+  await actualSearch(numSearchesD,numSearchesM, searchType, searchGen);
 }
 
-async function mobileSearch(numSearchesM,searchType, searchGen) {
+async function mobileSearch(numSearchesD,numSearchesM,searchType, searchGen) {
   if (searchType === "mobile") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = mobileUserAgent;
@@ -63,20 +64,40 @@ async function mobileSearch(numSearchesM,searchType, searchGen) {
     console.error("Invalid search type: " + searchType);
     return;
   }
-  await actualSearch(numSearchesM, searchType, searchGen);
+  await actualSearch(numSearchesD,numSearchesM, searchType, searchGen);
 }
 
-async function actualSearch(numSearches, searchType, searchGen) {
+async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
   var searchCount = 0;
   var prevSearches = [];
-
+  var numSearches ;
+  if(searchType==="desktop"){
+    numSearches = numSearchesD;
+  }else if(searchType==="mobile"){
+    numSearches =numSearchesM;
+  }
   while (searchCount < numSearches) {
     if (searchGen == "precise") {
       var searchTerm = generateSearchTerm();
     } else if (searchGen == "random") {
-      var searchTerm = generateString(numSearches);
+      var searchTerm = "";
+      if(searchType==="desktop"){
+        searchTerm = generateString(numSearchesD);
+      }else if(searchType==="desktop"){
+        searchTerm = generateString(numSearchesM);
+      }
+      
     } else {
       console.log("Error, (Random/Preceise)");
+      return;
+    }
+
+    if (stopSearch) {
+      result = "";
+      if (searchType === "mobile") {
+        userAgent = desktopUserAgent;
+      }
+      console.log("Stopped performing searches.");
       return;
     }
 
@@ -273,6 +294,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     });
     modeSearch(message.numSearchesD,message.numSearchesM, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
+    stopSearch = true;
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
