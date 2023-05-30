@@ -29,13 +29,13 @@ async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searc
   if (searchType === "desktopmobile") {
     console.log("Executing Desktop and Mobile Search");
 
-    await desktopSearch(numSearchesD,numSearchesM,"desktop" ,searchGen);
+    await desktopSearch(numSearchesD,numSearchesM,"desktopD" ,searchGen);
     console.log("Finished performing desktop search.");
 
     // await delay(numSearchesD * 1000);
 
     if (numSearchesM > 0) {
-      await mobileSearch(numSearchesD,numSearchesM,"mobile", searchGen);
+      await mobileSearch(numSearchesD,numSearchesM,"mobileM", searchGen);
       console.log("Finished performing mobile search.");
     }
   } else {
@@ -46,7 +46,7 @@ async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searc
 
 
 async function desktopSearch(numSearchesD,numSearchesM,searchType,searchGen) {
-  if (searchType === "desktop") {
+  if (searchType === "desktop"||searchType === "desktopD") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = desktopUserAgent;
   } else {
@@ -57,7 +57,7 @@ async function desktopSearch(numSearchesD,numSearchesM,searchType,searchGen) {
 }
 
 async function mobileSearch(numSearchesD,numSearchesM,searchType, searchGen) {
-  if (searchType === "mobile") {
+  if (searchType === "mobile"||searchType === "mobileM") {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = mobileUserAgent;
   } else {
@@ -72,9 +72,9 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
   var prevSearches = [];
   var numSearches=0 ;
   result="";
-  if(searchType==="desktop"){
+  if(searchType==="desktop" ||searchType==="desktopD"){
     numSearches = numSearchesD;
-  }else if(searchType==="mobile"){
+  }else if(searchType==="mobile"||searchType==="mobileM"){
     numSearches =numSearchesM;
   }
   while (searchCount < numSearches) {
@@ -82,9 +82,9 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
       var searchTerm = generateSearchTerm();
     } else if (searchGen == "random") {
       var searchTerm = "";
-      if(searchType==="desktop"){
+      if(searchType==="desktop"||searchType==="desktopD"){
         searchTerm = generateString(numSearchesD);
-      }else if(searchType==="mobile"){
+      }else if(searchType==="mobile"||searchType==="mobileM"){
         searchTerm = generateString(numSearchesM);
       }
       
@@ -95,10 +95,12 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
 
     if (stopSearch) {
       result = "";
-      if (searchType === "mobile") {
+      if (searchType === "mobile"||searchType==="mobileM") {
         userAgent = desktopUserAgent;
       }
-      // stopSearch = false;
+      if(searchType==="desktopD"){
+        stopSearch = true;
+      }
       console.log("Stopped performing searches.");
       return;
     }
@@ -119,25 +121,22 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
         });
       });
     } else {
-      console.error("No active tab found.");
-      return;
+      chrome.runtime.sendMessage({
+        type: "start-searches",
+        numSearchesD: numSearchesD,
+        numSearchesM: numSearchesM,
+        searchType: searchType,
+        searchGen: searchGen,
+      });
     }
-
-    if (searchType === "mobile" && searchCount >= numSearches) {
+    if(searchCount >= numSearches){
+      result="";
       clearInterval(intervalId);
-      result = "";
-      if (searchType === "mobile") {
+      if (searchType === "mobile"||searchType==="mobileM") {
         userAgent = desktopUserAgent;
       }
-      stopSearch = false;
       console.log("Finished performing searches.");
       return;
-    }
-    if(searchType==="desktop"&&searchCount >= numSearches){
-      clearInterval(intervalId);
-      stopSearch = true;
-    }else{
-      stopSearch = false;
     }
     searchCount++;
     await delay(1000);
@@ -300,6 +299,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.error("No active tab found.");
       }
     });
+    stopSearch=false;
     modeSearch(message.numSearchesD,message.numSearchesM, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
     stopSearch = true;
