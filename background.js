@@ -131,6 +131,7 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
     }
     if(searchCount >= numSearches){
       result="";
+      userAgent = desktopUserAgent;
       clearInterval(intervalId);
       if (searchType === "mobile"||searchType==="mobileM") {
         userAgent = desktopUserAgent;
@@ -303,6 +304,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     modeSearch(message.numSearchesD,message.numSearchesM, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
     stopSearch = true;
+    userAgent = desktopUserAgent;
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
