@@ -40,7 +40,6 @@ console.log("Game Fix");
     catch(e)
     {
         console.error("Script error...\nMake sure the page is fully loaded.");
-        return;
     }
     var test=0;
     var msnShoppingGamePane = null;
@@ -50,18 +49,16 @@ console.log("Game Fix");
     }
     var answerSelectorInterval = (msnShoppingGamePane == null ? 0 : setInterval(() => 
     {
-        var msnShoppingGamePane = document.querySelector("shopping-page-base")
+        var msnShoppingGamePane1 = document.querySelector("shopping-page-base")
     ?.shadowRoot.querySelector("shopping-homepage")
     ?.shadowRoot.querySelector("msft-feed-layout")
     ?.shadowRoot.querySelector("msn-shopping-game-pane");
  
-        if(msnShoppingGamePane != null){
-            msnShoppingGamePane.cardsPerGame = 1;
-        msnShoppingGamePane.setAttribute('gamestate', 'active');
-            msnShoppingGamePane.resetGame();
-
-}
-else alert("Unable to locate the shopping game!");
+        if(msnShoppingGamePane1.getAttribute("gamestate")=="win"||msnShoppingGamePane1.getAttribute("gamestate")=="idle"){
+            msnShoppingGamePane1.cardsPerGame = 1;
+            msnShoppingGamePane1.setAttribute('gamestate', 'active');
+            msnShoppingGamePane1.resetGame();
+        }
         if(test==10){
             clearInterval(answerSelectorInterval);
         }
