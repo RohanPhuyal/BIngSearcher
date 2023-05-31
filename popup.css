@@ -38,11 +38,19 @@ body {
     background-color: #0078d4;
     color: #fff;
     border: none;
-    padding: 8px 18px;
+    height: 100%;
+    width: 100%;
+    /* padding: 10px 18px; */
     border-radius: 3px;
     cursor: pointer;
   }
+  table {
+    width: 70%;
+  }
   
+  td {
+    height: 35px;
+  }
   button[type=submit]:hover {
     background-color: #005a9e;
   }
@@ -50,7 +58,9 @@ body {
     background-color: #0078d4;
     color: #fff;
     border: none;
-    padding: 8px 18px;
+    /* padding: 10px 18px; */
+    height: 100%;
+    width: 100%;
     border-radius: 3px;
     cursor: pointer;
   }

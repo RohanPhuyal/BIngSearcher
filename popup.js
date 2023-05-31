@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("search-form");
   var stopButton = document.getElementById("stop-button");
   var gameButton = document.getElementById("game-button");
+  var gameFixButton = document.getElementById("game-fix-button");
 
   // Define the webRequest listener
   function modifyUserAgent(details) {
@@ -112,10 +113,37 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   gameButton.addEventListener('click', function() {
-    chrome.tabs.executeScript({
-      file: 'contentscript.js'
+    var buttonClicked = "gameButton";
+    chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {
+      chrome.tabs.executeScript({
+        file: 'contentscript.js'
+      });
     });
   });
+  
+  gameFixButton.addEventListener('click', function() {
+    var buttonClicked = "gameFixButton";
+    chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {
+      chrome.tabs.executeScript({
+        file: 'contentscript.js'
+      });
+    });
+  });
+  
+    
+
+  // gameButton.addEventListener('click', function() {
+  //   chrome.tabs.executeScript({
+  //     file: 'contentscript.js',
+  //     code: 'var buttonClicked = "gameButton";'
+  //   });
+  // });
+  // gameFixButton.addEventListener('click', function() {
+  //   chrome.tabs.executeScript({
+  //     file: 'contentscript.js',
+  //     code: 'var buttonClicked = "gameFixButton";'
+  //   });
+  // });
 
 
 });

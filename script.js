@@ -1,9 +1,9 @@
 (function()
 {
-    if(!document.location.href.startsWith("https://www.msn.com/en-us/shopping")){
-        console.error("Invalid page!");
-        return;
-    }
+    // if(!document.location.href.startsWith("https://www.msn.com/en-us/shopping")){
+    //     console.error("Invalid page!");
+    //     return;
+    // }
     
     var shoppingPageChildren = null;
     try
