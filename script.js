@@ -1,6 +1,5 @@
 (function()
 {
-    console.log("SCRIPT MA PUGYO");
     var msnShoppingGamePane = document.querySelector("shopping-page-base")
     ?.shadowRoot.querySelector("shopping-homepage")
     ?.shadowRoot.querySelector("msft-feed-layout")

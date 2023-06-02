@@ -15,7 +15,7 @@ function incrementCounter() {
       ?.shadowRoot.querySelector("msn-shopping-game-pane");
       if(scroll==null){
         // executeScript();
-        console.log(scroll);
+        setTimeout(executeScript, 1000);
         return;
       }
       else{
@@ -35,6 +35,7 @@ function incrementCounter() {
      ?.shadowRoot.querySelector("msn-shopping-game-pane");
      if(scroll==null){
       console.log(scroll);
+      setTimeout(gameFix, 1000); // Retry after 100 milliseconds
       //  gameFix();
       return;
      }
