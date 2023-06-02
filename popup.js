@@ -113,6 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   gameButton.addEventListener('click', function() {
+    chrome.runtime.sendMessage({
+      type: "game-button"
+    });
     var buttonClicked = "gameButton";
     chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {
       chrome.tabs.executeScript({
@@ -122,6 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   gameFixButton.addEventListener('click', function() {
+    chrome.runtime.sendMessage({
+      type: "game-button"
+    });
     var buttonClicked = "gameFixButton";
     chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {
       chrome.tabs.executeScript({

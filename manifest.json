@@ -1,6 +1,6 @@
 {
   "name": "Bing Searcher",
-  "version": "6.0",
+  "version": "6.1",
   "manifest_version": 2,
   "description": "Perform multiple random searches on Bing.com for Microsoft Rewards",
   "icons": {
@@ -18,8 +18,9 @@
     "webRequest",
     "webRequestBlocking",
     "storage",
-    "https://www.bing.com/",
-    "https://www.msn.com/en-us/shopping/*"
+    "https://www.bing.com/*",
+    "https://www.msn.com/*/shopping/*",
+    "https://www.bing.com/shop*"
   ],"content_scripts": [
     {
       "js": [

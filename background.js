@@ -308,6 +308,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
+  }else if(message.type === "game-button"){
+    chrome.tabs.query({ url: ["https://www.msn.com/en-us/shopping/*", "https://www.bing.com/shop*"] }, function(tabs) {
+  if (tabs.length > 0) {
+    console.log("Either URL is opened.");
+  } else {
+    console.log("Neither URL is opened.");
+  }
+});
+
+
   }
 });
 

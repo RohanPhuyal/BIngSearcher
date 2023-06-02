@@ -14,7 +14,9 @@ function incrementCounter() {
       ?.shadowRoot.querySelector("msft-feed-layout")
       ?.shadowRoot.querySelector("msn-shopping-game-pane");
       if(scroll==null){
-        executeScript();
+        // executeScript();
+        console.log(scroll);
+        return;
       }
       else{
         scroll.scrollIntoView({behavior: 'smooth'})
@@ -32,7 +34,9 @@ function incrementCounter() {
      ?.shadowRoot.querySelector("msft-feed-layout")
      ?.shadowRoot.querySelector("msn-shopping-game-pane");
      if(scroll==null){
-       executeScript();
+      console.log(scroll);
+      //  gameFix();
+      return;
      }
      else{
        scroll.scrollIntoView({behavior: 'smooth'})
@@ -60,10 +64,10 @@ chrome.storage.local.get(['buttonClicked'], function(result) {
   }
 });
 
-document.addEventListener('change', function(event) {
-  var target = event.target;
-  if (target.tagName.toLowerCase() === 'select') {
-    console.log('Game Fix');
-    gameFix();
-  }
-});
+// document.addEventListener('change', function(event) {
+//   var target = event.target;
+//   if (target.tagName.toLowerCase() === 'select') {
+//     console.log('Game Fix');
+//     gameFix();
+//   }
+// });
