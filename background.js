@@ -324,18 +324,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
-  }else if(message.type === "game-button"){
-    chrome.tabs.query({ url:"https://www.msn.com/en-us/shopping/*" }, function(tabs) {
-  if (tabs.length > 0) {
-    chrome.tabs.update(tabs[0].id, { active: true });
-    console.log("Either URL is opened.");
-  } else {
-    chrome.tabs.create({ url: "https://www.msn.com/en-us/shopping" });
-    console.log("Neither URL is opened.");
-  }
-});
-
-
+  }else if(message.type === "game-button"||message.type === "game-fix-button"){
+        chrome.tabs.query({ url:"https://www.msn.com/en-us/shopping/*" }, function(tabs) {
+      if (tabs.length > 0) {
+        chrome.tabs.update(tabs[0].id, { active: true });
+        console.log("Either URL is opened.");
+      } else {
+        chrome.tabs.create({ url: "https://www.msn.com/en-us/shopping" });
+        console.log("Neither URL is opened.");
+      }
+    });
   }
 });
 

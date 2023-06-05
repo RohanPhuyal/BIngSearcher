@@ -55,9 +55,6 @@ function incrementCounter() {
      (document.head || document.documentElement).appendChild(s);     
        chrome.storage.local.set({ buttonClicked: "" });
   }
-  if(scroll.getAttribute('gamestate')==='win'){
-    setTimeout(gameFix, 1000);
-}
 
 chrome.storage.local.get(['buttonClicked'], function(result) {
   var buttonClicked = result.buttonClicked;

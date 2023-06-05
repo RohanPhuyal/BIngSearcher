@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   gameFixButton.addEventListener('click', function() {
     chrome.runtime.sendMessage({
-      type: "game-button"
+      type: "game-fix-button"
     });
     var buttonClicked = "gameFixButton";
     chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {

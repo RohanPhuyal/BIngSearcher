@@ -74,6 +74,11 @@ console.log("Game Fix");
     ?.shadowRoot.querySelector("shopping-homepage")
     ?.shadowRoot.querySelector("msft-feed-layout")
     ?.shadowRoot.querySelector("msn-shopping-game-pane");
+    var selectButton = document.querySelector("shopping-page-base")
+    ?.shadowRoot.querySelector("shopping-homepage")
+    ?.shadowRoot.querySelector("msft-feed-layout")
+    ?.shadowRoot.querySelector("msn-shopping-game-pane")
+    ?.shadowRoot.querySelector(".shopping-select-overlay-button");
     refreshGame();
     function refreshGame(){
         if(msnShoppingGamePane2 != null){
@@ -83,9 +88,19 @@ console.log("Game Fix");
         }else{
             console.error("Unable to locate the shopping game!");
         }
+        if(selectButton==null){
+            console.log("NULL");
+        }else{
+            console.log("Not null");
+        }
     }
     msnShoppingGamePane2.addEventListener('click', function(event) {
+        console.log("MOUSE");
         refreshGame();
         });
+        // if(msnShoppingGamePane2.getAttribute('gamestate')==='active'){
+        //     console.log(msnShoppingGamePane2);
+        //     setTimeout(gameFix, 1000);
+        // }
         
 })();
