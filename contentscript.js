@@ -8,14 +8,18 @@ function incrementCounter() {
   executeScript();
   // Call the incrementCounter function when the content script is executed
   incrementCounter();*/
-  function executeScript(){
-       var scroll = document.querySelector("shopping-page-base")
+  var scroll = document.querySelector("shopping-page-base")
       ?.shadowRoot.querySelector("shopping-homepage")
       ?.shadowRoot.querySelector("msft-feed-layout")
       ?.shadowRoot.querySelector("msn-shopping-game-pane");
+  function executeScript(){
+      //  var scroll = document.querySelector("shopping-page-base")
+      // ?.shadowRoot.querySelector("shopping-homepage")
+      // ?.shadowRoot.querySelector("msft-feed-layout")
+      // ?.shadowRoot.querySelector("msn-shopping-game-pane");
       if(scroll==null){
         // executeScript();
-        setTimeout(executeScript, 1000);
+        setTimeout(executeScript, 5000);
         return;
       }
       else{
@@ -29,13 +33,13 @@ function incrementCounter() {
         chrome.storage.local.set({ buttonClicked: "" });
   }
   function gameFix(){
-      var scroll = document.querySelector("shopping-page-base")
-     ?.shadowRoot.querySelector("shopping-homepage")
-     ?.shadowRoot.querySelector("msft-feed-layout")
-     ?.shadowRoot.querySelector("msn-shopping-game-pane");
+    //   var scroll = document.querySelector("shopping-page-base")
+    //  ?.shadowRoot.querySelector("shopping-homepage")
+    //  ?.shadowRoot.querySelector("msft-feed-layout")
+    //  ?.shadowRoot.querySelector("msn-shopping-game-pane");
      if(scroll==null){
       console.log(scroll);
-      setTimeout(gameFix, 1000); // Retry after 100 milliseconds
+      setTimeout(gameFix, 5000); // Retry after 100 milliseconds
       //  gameFix();
       return;
      }
@@ -51,6 +55,9 @@ function incrementCounter() {
      (document.head || document.documentElement).appendChild(s);     
        chrome.storage.local.set({ buttonClicked: "" });
   }
+  if(scroll.getAttribute('gamestate')==='win'){
+    setTimeout(gameFix, 1000);
+}
 
 chrome.storage.local.get(['buttonClicked'], function(result) {
   var buttonClicked = result.buttonClicked;

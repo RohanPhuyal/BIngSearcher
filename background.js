@@ -113,14 +113,30 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
 
     var url = searchUrl + encodeURIComponent(searchTerm);
 
+    // if (activeTabId) {
+    //   await new Promise((resolve) => {
+    //     chrome.tabs.update(activeTabId, { url: url }, function (tab) {
+    //       console.log("Searching for: " + searchTerm + " in " + searchType);
+    //       resolve();
+    //     });
+    //   });
+    // } 
     if (activeTabId) {
-      await new Promise((resolve) => {
-        chrome.tabs.update(activeTabId, { url: url }, function (tab) {
-          console.log("Searching for: " + searchTerm + " in " + searchType);
-          resolve();
-        });
+      // Update tab URL
+      chrome.tabs.update(activeTabId, { url: url });
+    
+      // Listen for tab load completion
+      chrome.tabs.onUpdated.addListener(function onTabUpdated(tabId, changeInfo) {
+        if (tabId === activeTabId && changeInfo.status === "complete") {
+          // Website is fully loaded, perform your desired actions here
+          console.log("Website is fully loaded");
+           // Perform another search
+        // actualSearch(numSearchesD, numSearchesM, searchType, searchGen);
+          // Remove the event listener
+          chrome.tabs.onUpdated.removeListener(onTabUpdated);
+        }
       });
-    } else {
+    }else {
       chrome.runtime.sendMessage({
         type: "start-searches",
         numSearchesD: numSearchesD,

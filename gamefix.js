@@ -30,43 +30,62 @@ console.log("Game Fix");
     //     return;
     // }
     
-    var shoppingPageChildren = null;
-    try
-    {
-        shoppingPageChildren = document.getElementsByTagName("shopping-page-base")[0].shadowRoot.children[0]
-            .getElementsByTagName("shopping-homepage")[0].shadowRoot.children[0]
-            .getElementsByTagName("msft-feed-layout")[0].shadowRoot.children;
-    }
-    catch(e)
-    {
-        console.error("Script error...\nMake sure the page is fully loaded.");
-    }
-    var test=0;
-    var msnShoppingGamePane = null;
-    for(i = 0; i <= shoppingPageChildren.length - 1; i++){
-        if(shoppingPageChildren[i].getAttribute("gamestate") == "idle"||shoppingPageChildren[i].getAttribute("gamestate")=="win")
-            msnShoppingGamePane = shoppingPageChildren[i];
-    }
-    var answerSelectorInterval = (msnShoppingGamePane == null ? 0 : setInterval(() => 
-    {
-        var msnShoppingGamePane1 = document.querySelector("shopping-page-base")
+    // var shoppingPageChildren = null;
+    // try
+    // {
+    //     shoppingPageChildren = document.getElementsByTagName("shopping-page-base")[0].shadowRoot.children[0]
+    //         .getElementsByTagName("shopping-homepage")[0].shadowRoot.children[0]
+    //         .getElementsByTagName("msft-feed-layout")[0].shadowRoot.children;
+    // }
+    // catch(e)
+    // {
+    //     console.error("Script error...\nMake sure the page is fully loaded.");
+    // }
+    // var test=0;
+    // var msnShoppingGamePane = null;
+    // for(i = 0; i <= shoppingPageChildren.length - 1; i++){
+    //     if(shoppingPageChildren[i].getAttribute("gamestate") == "idle"||shoppingPageChildren[i].getAttribute("gamestate")=="win")
+    //         msnShoppingGamePane = shoppingPageChildren[i];
+    // }
+    // var answerSelectorInterval = (msnShoppingGamePane == null ? 0 : setInterval(() => 
+    // {
+    //     var msnShoppingGamePane1 = document.querySelector("shopping-page-base")
+    // ?.shadowRoot.querySelector("shopping-homepage")
+    // ?.shadowRoot.querySelector("msft-feed-layout")
+    // ?.shadowRoot.querySelector("msn-shopping-game-pane");
+ 
+    //     if(msnShoppingGamePane1.getAttribute("gamestate")=="win"||msnShoppingGamePane1.getAttribute("gamestate")=="idle"){
+    //         msnShoppingGamePane1.cardsPerGame = 1;
+    //         msnShoppingGamePane1.setAttribute('gamestate', 'active');
+    //         msnShoppingGamePane1.resetGame();
+    //     }
+    //     if(test==10){
+    //         clearInterval(answerSelectorInterval);
+    //     }
+    //     test++;
+    // }, 500));
+    // if (answerSelectorInterval == 0) {
+    //     console.error("Unable to locate shopping game...\nTry scrolling down to it.");
+    //   } else {
+    //     console.log("Shopping game located!\nEnjoy :)");
+    //   }
+
+        var msnShoppingGamePane2 = document.querySelector("shopping-page-base")
     ?.shadowRoot.querySelector("shopping-homepage")
     ?.shadowRoot.querySelector("msft-feed-layout")
     ?.shadowRoot.querySelector("msn-shopping-game-pane");
- 
-        if(msnShoppingGamePane1.getAttribute("gamestate")=="win"||msnShoppingGamePane1.getAttribute("gamestate")=="idle"){
-            msnShoppingGamePane1.cardsPerGame = 1;
-            msnShoppingGamePane1.setAttribute('gamestate', 'active');
-            msnShoppingGamePane1.resetGame();
+    refreshGame();
+    function refreshGame(){
+        if(msnShoppingGamePane2 != null){
+            msnShoppingGamePane2.cardsPerGame = 1;
+            msnShoppingGamePane2.setAttribute('gamestate', 'active');
+            msnShoppingGamePane2.resetGame();
+        }else{
+            console.error("Unable to locate the shopping game!");
         }
-        if(test==10){
-            clearInterval(answerSelectorInterval);
-        }
-        test++;
-    }, 500));
-    if (answerSelectorInterval == 0) {
-        console.error("Unable to locate shopping game...\nTry scrolling down to it.");
-      } else {
-        console.log("Shopping game located!\nEnjoy :)");
-      }
+    }
+    msnShoppingGamePane2.addEventListener('click', function(event) {
+        refreshGame();
+        });
+        
 })();
