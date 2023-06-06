@@ -28,16 +28,16 @@ function delay(ms) {
 async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searchGen) {
   if (searchType === "desktopmobile") {
     console.log("Executing Desktop and Mobile Search");
+    
+    if (numSearchesM > 0) {
+      await mobileSearch(numSearchesD,numSearchesM,"mobileM", searchGen);
+      console.log("Finished performing mobile search.");
+    }
 
     await desktopSearch(numSearchesD,numSearchesM,"desktopD" ,searchGen);
     console.log("Finished performing desktop search.");
 
     // await delay(numSearchesD * 1000);
-
-    if (numSearchesM > 0) {
-      await mobileSearch(numSearchesD,numSearchesM,"mobileM", searchGen);
-      console.log("Finished performing mobile search.");
-    }
   } else {
     console.error("Invalid search type: " + searchType);
     return;
@@ -344,37 +344,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.log("Neither URL is opened.");
       }
     });
-  }
-  
-  if(message.type === "game-fix-button"){
-    if(tabId){
-      startFixExecution(tabId);
-    }
-  }
-});
-
-var fixIntervalId;
-function executeFixFunction(tabId) {
-  chrome.tabs.executeScript(tabId, { code: 'gameFix();' });
-}
-
-function startFixExecution(tabId) {
-  executeFixFunction(tabId);
-  fixIntervalId = setInterval(function () {
-    executeFixFunction(tabId);
-  }, 5000);
-}
-
-function stopFixExecution() {
-  // Clear the interval
-  clearInterval(fixIntervalId);
-}
-// Listen for tab removal
-chrome.tabs.onRemoved.addListener(function (removedTabId, removeInfo) {
-  // Check if the removed tab matches the tab you're interested in
-  if (removedTabId === tabId) {
-    // Stop executing the function
-    stopFixExecution();
   }
 });
 

@@ -7,7 +7,6 @@ var searchGen;
 document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("search-form");
   var stopButton = document.getElementById("stop-button");
-  var gameButton = document.getElementById("game-button");
   var gameFixButton = document.getElementById("game-fix-button");
 
   // Define the webRequest listener
@@ -112,18 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
     chrome.storage.sync.set({ lastMethodValue: searchGen });
   });
 
-  gameButton.addEventListener('click', function() {
-    chrome.runtime.sendMessage({
-      type: "game-button"
-    });
-    var buttonClicked = "gameButton";
-    chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {
-      chrome.tabs.executeScript({
-        file: 'contentscript.js'
-      });
-    });
-  });
-  
   gameFixButton.addEventListener('click', function() {
     chrome.runtime.sendMessage({
       type: "game-button"

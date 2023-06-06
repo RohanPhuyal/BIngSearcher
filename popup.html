@@ -15,7 +15,7 @@
         name="num-searchesD"
         min="1"
         max="50"
-        value="5"
+        value="40"
         required
       />
       <label>M:</label><input
@@ -24,21 +24,21 @@
         name="num-searchesM"
         min="1"
         max="50"
-        value="5"
+        value="25"
         required
       /> <br>
       <label for="search-type">Search type:</label> <br>
       <select id="search-type" name="search-type" required>
-        <option value="desktop">Desktop</option>
         <option value="desktopmobile">Desktop & Mobile</option>
+        <option value="desktop">Desktop</option>
         <option value="mobile">Mobile</option>
       </select> <br>
       <label for="precise"> 
-        <input type="radio" id="precise" name="search-gen" value="precise" checked="checked">
+        <input type="radio" id="precise" name="search-gen" value="precise" >
         Precise
       </label>
       <label for="random">
-        <input type="radio" id="random" name="search-gen" value="random" >
+        <input type="radio" id="random" name="search-gen" value="random" checked="checked">
         Random
       </label>
       
@@ -47,11 +47,12 @@
         <tr>
           <td><button type="submit">Start</button></td>
           <td><button type="button" id="stop-button">Stop</button></td>
+          <td><button type="button" id="game-fix-button">Game</button></td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td><button type="button" id="game-button">Game</button></td>
           <td><button type="button" id="game-fix-button">Fix</button></td>
-        </tr>
+        </tr> -->
       </table>
       <!-- <button type="submit">Start</button> &nbsp;
       <button type="button" id="stop-button">Stop</button> <br>
