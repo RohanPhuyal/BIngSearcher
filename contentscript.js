@@ -12,6 +12,14 @@ function incrementCounter() {
       ?.shadowRoot.querySelector("shopping-homepage")
       ?.shadowRoot.querySelector("msft-feed-layout")
       ?.shadowRoot.querySelector("msn-shopping-game-pane");
+
+      // var selectButton = document.querySelector("shopping-page-base")
+      // ?.shadowRoot.querySelector("shopping-homepage")
+      // ?.shadowRoot.querySelector("msft-feed-layout")
+      // ?.shadowRoot.querySelector("msn-shopping-game-pane")
+      // ?.shadowRoot.querySelector("msft-stripe")
+      // ?.querySelector("fluent-card")
+      // ?.querySelector("msn-shopping-card").getElementsByClassName("shopping-select-overlay-button")[0];
   function executeScript(){
       //  var scroll = document.querySelector("shopping-page-base")
       // ?.shadowRoot.querySelector("shopping-homepage")

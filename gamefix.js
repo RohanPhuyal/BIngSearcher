@@ -70,16 +70,34 @@ console.log("Game Fix");
     //     console.log("Shopping game located!\nEnjoy :)");
     //   }
 
+    var selectButton = document.querySelector("shopping-page-base")
+      ?.shadowRoot.querySelector("shopping-homepage")
+      ?.shadowRoot.querySelector("msft-feed-layout")
+      ?.shadowRoot.querySelector("msn-shopping-game-pane")
+      ?.shadowRoot.querySelector("msft-stripe")
+      ?.querySelector("fluent-card")
+      ?.querySelector("msn-shopping-card").getElementsByClassName("shopping-select-overlay-button")[0];
+
         var msnShoppingGamePane2 = document.querySelector("shopping-page-base")
     ?.shadowRoot.querySelector("shopping-homepage")
     ?.shadowRoot.querySelector("msft-feed-layout")
     ?.shadowRoot.querySelector("msn-shopping-game-pane");
     refreshGame();
+    function selectButtonCLick(){
+        selectButton.click();
+    }
     function refreshGame(){
         if(msnShoppingGamePane2 != null){
             msnShoppingGamePane2.cardsPerGame = 1;
             msnShoppingGamePane2.setAttribute('gamestate', 'active');
             msnShoppingGamePane2.resetGame();
+            if (selectButton) {
+                console.log("Select Value Received");
+                setTimeout(selectButtonCLick,1000);
+              }
+            else{
+                console.log("Select Value Not Received");
+            }
         }else{
             console.error("Unable to locate the shopping game!");
         }
@@ -91,6 +109,7 @@ console.log("Game Fix");
     }
     msnShoppingGamePane2.addEventListener('click', function(event) {
         console.log("MOUSE");
+
         refreshGame();
         });
         // if(msnShoppingGamePane2.getAttribute('gamestate')==='active'){
