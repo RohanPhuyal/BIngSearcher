@@ -74,11 +74,6 @@ console.log("Game Fix");
     ?.shadowRoot.querySelector("shopping-homepage")
     ?.shadowRoot.querySelector("msft-feed-layout")
     ?.shadowRoot.querySelector("msn-shopping-game-pane");
-    var selectButton = document.querySelector("shopping-page-base")
-    ?.shadowRoot.querySelector("shopping-homepage")
-    ?.shadowRoot.querySelector("msft-feed-layout")
-    ?.shadowRoot.querySelector("msn-shopping-game-pane")
-    ?.shadowRoot.querySelector(".shopping-select-overlay-button");
     refreshGame();
     function refreshGame(){
         if(msnShoppingGamePane2 != null){

@@ -304,7 +304,7 @@ function generateSearchTerm() {
 
   return adjectives[adjIndex] + " " + nouns[nounIndex];
 }
-
+var tabId=null;
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   
   if (message.type === "start-searches") {
@@ -324,16 +324,57 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
-  }else if(message.type === "game-button"||message.type === "game-fix-button"){
-        chrome.tabs.query({ url:"https://www.msn.com/en-us/shopping/*" }, function(tabs) {
+  }else if (message.type === "game-button") {
+    chrome.tabs.query({ url: "https://www.msn.com/en-us/shopping/*" }, function(tabs) {
       if (tabs.length > 0) {
-        chrome.tabs.update(tabs[0].id, { active: true });
+        // Tab already exists, update it and get the tab ID
+        chrome.tabs.update(tabs[0].id, { active: true }, function(updatedTab) {
+          tabId = updatedTab.id;
+          console.log("Tab ID:", tabId);
+          // Continue with further logic using the tab ID
+        });
         console.log("Either URL is opened.");
       } else {
-        chrome.tabs.create({ url: "https://www.msn.com/en-us/shopping" });
+        // Tab doesn't exist, create a new one and get the tab ID
+        chrome.tabs.create({ url: "https://www.msn.com/en-us/shopping" }, function(createdTab) {
+          tabId = createdTab.id;
+          console.log("Tab ID:", tabId);
+          // Continue with further logic using the tab ID
+        });
         console.log("Neither URL is opened.");
       }
     });
+  }
+  
+  if(message.type === "game-fix-button"){
+    if(tabId){
+      startFixExecution(tabId);
+    }
+  }
+});
+
+var fixIntervalId;
+function executeFixFunction(tabId) {
+  chrome.tabs.executeScript(tabId, { code: 'gameFix();' });
+}
+
+function startFixExecution(tabId) {
+  executeFixFunction(tabId);
+  fixIntervalId = setInterval(function () {
+    executeFixFunction(tabId);
+  }, 2000);
+}
+
+function stopFixExecution() {
+  // Clear the interval
+  clearInterval(fixIntervalId);
+}
+// Listen for tab removal
+chrome.tabs.onRemoved.addListener(function (removedTabId, removeInfo) {
+  // Check if the removed tab matches the tab you're interested in
+  if (removedTabId === tabId) {
+    // Stop executing the function
+    stopFixExecution();
   }
 });
 

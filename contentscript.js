@@ -55,6 +55,13 @@ function incrementCounter() {
      (document.head || document.documentElement).appendChild(s);     
        chrome.storage.local.set({ buttonClicked: "" });
   }
+  function sendToBg(){
+    chrome.runtime.sendMessage({
+      type: "game-fix-button"
+    });
+  }
+  
+
 
 chrome.storage.local.get(['buttonClicked'], function(result) {
   var buttonClicked = result.buttonClicked;
@@ -64,6 +71,7 @@ chrome.storage.local.get(['buttonClicked'], function(result) {
       executeScript();
     } else if (buttonClicked === 'gameFixButton') {
       console.log('gameFixButton was clicked');
+      sendToBg();
       gameFix();
     }
   }
