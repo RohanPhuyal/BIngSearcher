@@ -93,7 +93,7 @@ console.log("Game Fix");
             msnShoppingGamePane2.resetGame();
             if (selectButton) {
                 console.log("Select Value Received");
-                setTimeout(selectButtonCLick,1000);
+                setTimeout(selectButtonCLick,3000);
               }
             else{
                 console.log("Select Value Not Received");

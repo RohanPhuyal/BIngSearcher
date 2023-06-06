@@ -362,7 +362,7 @@ function startFixExecution(tabId) {
   executeFixFunction(tabId);
   fixIntervalId = setInterval(function () {
     executeFixFunction(tabId);
-  }, 2000);
+  }, 5000);
 }
 
 function stopFixExecution() {
