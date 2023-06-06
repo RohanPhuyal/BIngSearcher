@@ -46,16 +46,13 @@
 
         var fixIntervalId;
         function executeFixFunction() {
-            selectExists=selectExists=document.querySelector("shopping-page-base")
+            selectExists=document.querySelector("shopping-page-base")
             ?.shadowRoot.querySelector("shopping-homepage")
             ?.shadowRoot.querySelector("msft-feed-layout")
             ?.shadowRoot.querySelector("msn-shopping-game-pane").getAttribute("gamestate");
             console.log("Execute Fix Function: "+selectExists);
             if(selectExists=='win'||selectExists=='idle'||selectExists=='active'){
                 refreshGame();
-            }
-            else{
-                return;
             }
         }
 
