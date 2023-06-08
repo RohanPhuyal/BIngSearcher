@@ -123,19 +123,27 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
     // } 
     if (activeTabId) {
       // Update tab URL
-      chrome.tabs.update(activeTabId, { url: url });
-    
-      // Listen for tab load completion
-      chrome.tabs.onUpdated.addListener(function onTabUpdated(tabId, changeInfo) {
-        if (tabId === activeTabId && changeInfo.status === "complete") {
-          // Website is fully loaded, perform your desired actions here
-          console.log("Website is fully loaded");
-           // Perform another search
+      chrome.tabs.update(activeTabId, { url: url }, async function (tab) {
+        console.log("Searching for: " + searchTerm + " in " + searchType);
+
+        // Wait for the tab to be fully loaded
+        await new Promise((resolve) => {
+          // Listen for tab load completion
+          chrome.tabs.onUpdated.addListener(function onTabUpdated(tabId, changeInfo) {
+            console.log("Tab Id: " + tabId);
+            if (tabId === activeTabId && changeInfo.status === "complete") {
+              // Website is fully loaded, resolve the promise
+              console.log("Website is fully loaded.");
+              chrome.tabs.onUpdated.removeListener(onTabUpdated);
+              resolve();
+            }
+          });
+        });
+        console.log("kati time execute yo");
+        // Perform another search or further actions
         // actualSearch(numSearchesD, numSearchesM, searchType, searchGen);
-          // Remove the event listener
-          chrome.tabs.onUpdated.removeListener(onTabUpdated);
-        }
       });
+
     }else {
       chrome.runtime.sendMessage({
         type: "start-searches",
