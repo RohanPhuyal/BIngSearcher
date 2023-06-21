@@ -1,6 +1,7 @@
 var intervalId;
 var desktopUserAgent = navigator.userAgent;
 var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
+// var mobileUserAgent = "Mozilla/5.0 (Linux; {Android Version}; {Build Tag etc.}) AppleWebKit/{WebKit Rev} (KHTML, like Gecko) Chrome/{Chrome Rev} Mobile Safari/{WebKit Rev}";
 var userAgent = navigator.userAgent;
 var result="";
 var activeTabId = null;
