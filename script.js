@@ -41,5 +41,5 @@
        }
         var lowestPriceItemID = getLowestPriceItemID(msnShoppingGamePane.originalPricesbyId); 
         var itemIndex = getObjectIndexFromArray(msnShoppingGamePane.displayedShoppingEntities, lowestPriceItemID);
-         highlightItems(itemIndex, shoppingGame.getElementsByClassName("shopping-game-card-outline")) 
+         highlightItems(itemIndex, shoppingGame.getElementsByClassName("shopping-game-card-outline"));
        })();
