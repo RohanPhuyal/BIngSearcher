@@ -18,10 +18,10 @@
     function getObjectIndexFromArray(objects, id) {
         for (let i = 0; i < objects.length; i++) {
             if (objects[i].id === id) {
-                return i
+                return i;
             }
         }
-        return -1
+        return -1;
     }
     function getLowestPriceItemID(priceMap) {
         var lowestPriceItemID;
@@ -29,10 +29,10 @@
         for (const [itemID, item] of Object.entries(priceMap)) {
             let price = parseFloat(item.price.substring(1));
             if (currLowestPrice > price) {
-                lowestPriceItemID = itemID; currLowestPrice = price
+                lowestPriceItemID = itemID; currLowestPrice = price;
             }
         }
-        return lowestPriceItemID
+        return lowestPriceItemID;
     }
 
     function highlightItems(correctIndex, items) {
@@ -43,7 +43,6 @@
                     ?.querySelector("msn-shopping-card")
                     .getElementsByClassName("shopping-select-overlay-button")[0];
                 items[i].style.borderColor = "red";
-
             }
         }
     }
@@ -62,7 +61,7 @@
         ?.shadowRoot.querySelector("shopping-homepage")
         ?.shadowRoot.querySelector("msft-feed-layout")
         ?.shadowRoot.querySelector("msn-shopping-game-pane");
-        if (msnShoppingGamePane.getAttribute('gamestate')=='win'||msnShoppingGamePane.getAttribute('gamestate')=='idle') {
+        if (msnShoppingGamePane.getAttribute('gamestate')=='win'||msnShoppingGamePane.getAttribute('gamestate')=='idle'||msnShoppingGamePane.getAttribute('gamestate')=='lose') {
             msnShoppingGamePane.setAttribute('gamestate', 'active');
             msnShoppingGamePane.resetGame();
         }
