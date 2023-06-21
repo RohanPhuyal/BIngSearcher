@@ -12,7 +12,7 @@
      else{
       chrome.storage.local.get(['buttonClicked'], function(result) {
         if(result.buttonClicked!=""){
-          scroll.scrollIntoView({behavior: 'smooth'})
+          scroll.scrollIntoView({behavior: 'smooth'});
         }
       });
      }

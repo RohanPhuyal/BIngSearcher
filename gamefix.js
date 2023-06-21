@@ -1,7 +1,9 @@
 (function () {
+    var iterationNumber = 0;
     var selectButton = null;
     var selectExists = null;
-
+    var fixIntervalId;
+    
     var msnShoppingGamePane2 = document.querySelector("shopping-page-base")
         ?.shadowRoot.querySelector("shopping-homepage")
         ?.shadowRoot.querySelector("msft-feed-layout")
@@ -43,15 +45,8 @@
                 items[i].style.borderColor = "red";
 
             }
-             else {
-                 items[i].style.borderColor = ""; items[i].style.display = "none"; 
-                } 
         }
     }
-    var lowestPriceItemID = getLowestPriceItemID(msnShoppingGamePane2.originalPricesbyId);
-        var itemIndex = getObjectIndexFromArray(msnShoppingGamePane2.displayedShoppingEntities, lowestPriceItemID);
-        console.log("Coeeect Index: "+itemIndex);
-        highlightItems(itemIndex, shoppingGame.getElementsByClassName("shopping-game-card-outline"));
     function refreshGame() {
         var lowestPriceItemID = getLowestPriceItemID(msnShoppingGamePane2.originalPricesbyId);
         var itemIndex = getObjectIndexFromArray(msnShoppingGamePane2.displayedShoppingEntities, lowestPriceItemID);
@@ -73,7 +68,12 @@
         }
     }
     function selectButtonCLick() {
+        console.log("Iteration no: "+iterationNumber)
         selectButton.click();
+        iterationNumber++;
+        if(iterationNumber===10){
+            stopFixExecution();
+        }
     }
     refreshGame();
     msnShoppingGamePane2.addEventListener('click', function (event) {
@@ -81,7 +81,6 @@
         refreshGame();
     });
 
-    var fixIntervalId;
     function executeFixFunction() {
         selectExists = document.querySelector("shopping-page-base")
             ?.shadowRoot.querySelector("shopping-homepage")
@@ -95,14 +94,12 @@
 
     function startFixExecution() {
         console.log("Start Fix Function");
-        // executeFixFunction();
         fixIntervalId = setInterval(function () {
             executeFixFunction();
-        }, 1500);
+        }, 1100);
     }
     startFixExecution();
     function stopFixExecution() {
-        //Not Yet Implemented
         // Clear the interval
         clearInterval(fixIntervalId);
     }
