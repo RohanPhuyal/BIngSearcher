@@ -3,7 +3,17 @@
     var selectButton = null;
     var selectExists = null;
     var fixIntervalId;
-    
+    var scroll= document.querySelector("shopping-page-base")
+      ?.shadowRoot.querySelector("shopping-homepage")
+      ?.shadowRoot.querySelector("msft-feed-layout")
+      ?.shadowRoot.querySelector("msn-shopping-game-pane");
+
+      if(scroll){
+        scroll.scrollIntoView({behavior: 'smooth'});
+      }else{
+        alert("Couldn't Load Game, Reload");
+		return;
+      }
     var msnShoppingGamePane2 = document.querySelector("shopping-page-base")
         ?.shadowRoot.querySelector("shopping-homepage")
         ?.shadowRoot.querySelector("msft-feed-layout")
@@ -70,7 +80,7 @@
         console.log("Iteration no: "+iterationNumber)
         selectButton.click();
         iterationNumber++;
-        if(iterationNumber===10){
+        if(iterationNumber>=10){
             stopFixExecution();
         }
     }
