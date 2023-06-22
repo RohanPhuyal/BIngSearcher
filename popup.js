@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("search-form");
   var stopButton = document.getElementById("stop-button");
   var gameFixButton = document.getElementById("game-fix-button");
+  var gameManualButton = document.getElementById("game-manual-button");
 
   // Define the webRequest listener
   function modifyUserAgent(details) {
@@ -117,6 +118,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     var buttonClicked = "gameFixButton";
     chrome.storage.local.set({ buttonClicked: buttonClicked }, function() {
+      chrome.tabs.executeScript({
+        file: 'contentscript.js'
+      });
+    });
+  });
+  gameManualButton.addEventListener('click', function() {
+    chrome.runtime.sendMessage({
+      type: "game-button"
+    });
+    var buttonClickedM = "gameManualButton";
+    chrome.storage.local.set({ buttonClickedM: buttonClickedM }, function() {
       chrome.tabs.executeScript({
         file: 'contentscript.js'
       });

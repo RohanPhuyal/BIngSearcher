@@ -30,6 +30,28 @@
       type: "game-fix-button"
     });
   }
+  function gameManual(){
+    if(scroll==null){
+      console.log(scroll);
+      setTimeout(gameFix, 1000); // Retry after 100 milliseconds
+      return;
+     }
+     else{
+      chrome.storage.local.get(['buttonClickedM'], function(result) {
+        if(result.buttonClickedM!=""){
+          scroll.scrollIntoView({behavior: 'smooth'});
+        }
+      });
+     }
+     var s = document.createElement('script');
+     s.src = chrome.runtime.getURL('gamemanual.js');
+     s.onload = function() {
+       this.remove();
+       // Code to be executed after the script is loaded and executed
+     };
+     (document.head || document.documentElement).appendChild(s);     
+       chrome.storage.local.set({ buttonClickedM: "" });
+  }
   
 
 chrome.storage.local.get(['buttonClicked'], function(result) {
@@ -39,6 +61,16 @@ chrome.storage.local.get(['buttonClicked'], function(result) {
       console.log('gameFixButton was clicked');
       // sendToBg();
       gameFix();
+    }
+  }
+});
+chrome.storage.local.get(['buttonClickedM'], function(result) {
+  var buttonClickedM = result.buttonClickedM;
+  if (typeof buttonClickedM !== 'undefined') {
+     if (buttonClickedM === 'gameManualButton') {
+      console.log('gameFixButton was clicked');
+      // sendToBg();
+      gameManual();
     }
   }
 });
