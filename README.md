@@ -16,4 +16,4 @@ Select String Generation Type (Random Recommended)
 Start Button to start the search, Stop Button to stop the search.
 Game button to start msn shopping game.
 
-Support me: https://paypal.me/anishphuyal
+Support me: [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/anishphuyal/300)
