@@ -15,3 +15,5 @@ Select Search Type (Desktop&Mobile Recommended)
 Select String Generation Type (Random Recommended)
 Start Button to start the search, Stop Button to stop the search.
 Game button to start msn shopping game.
+
+Support me: https://paypal.me/anishphuyal
