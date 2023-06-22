@@ -80,13 +80,13 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
   }
   while (searchCount < numSearches) {
     if (searchGen == "precise") {
-      var searchTerm = generateSearchTerm();
+      var searchTerm = await generateSearchTerm();
     } else if (searchGen == "random") {
       var searchTerm = "";
       if(searchType==="desktop"||searchType==="desktopD"){
-        searchTerm = generateString(numSearchesD);
+        searchTerm = await generateString(numSearchesD);
       }else if(searchType==="mobile"||searchType==="mobileM"){
-        searchTerm = generateString(numSearchesM);
+        searchTerm = await generateString(numSearchesM);
       }
       
     } else {
@@ -168,22 +168,27 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
     await delay(1000);
   }
 }
-
-
-function generateString(numSearches){
+async function generateString(numSearches) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  if(result===""){
-      for (var i = 0; i < numSearches; i++) {
+  if (result === "") {
+    for (var i = 0; i < numSearches; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-  }else{
-    result=result.slice(0,-1);
+  } else {
+    result = result.slice(0, -1);
   }
-  return result;
+  resolve(result);
+    }, 0);
+  });
 }
 
-function generateSearchTerm() {
+async function generateSearchTerm() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+
   var adjectives = [
     "famous",
     "delicious",
@@ -311,7 +316,9 @@ function generateSearchTerm() {
   var adjIndex = Math.floor(Math.random() * adjectives.length);
   var nounIndex = Math.floor(Math.random() * nouns.length);
 
-  return adjectives[adjIndex] + " " + nouns[nounIndex];
+  resolve(adjectives[adjIndex] + " " + nouns[nounIndex]);
+}, 0);
+});
 }
 var tabId=null;
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
