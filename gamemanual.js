@@ -7,7 +7,7 @@
     if (scroll) {
         scroll.scrollIntoView({behavior: 'smooth'});
     } else {
-        alert("Couldn't Load Game, Reload");
+        console.log("Couldn't Load Game, Reload");
         return;
     }
     var selectButton = null;
@@ -104,11 +104,6 @@
         await reloadGame();
     }
 
-    await refreshGame();
-    msnShoppingGamePane2.addEventListener('click', function (event) {
-        console.log("MOUSE");
-        refreshGame();
-    });
 
     var fixIntervalId;
 
