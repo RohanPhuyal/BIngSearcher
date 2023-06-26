@@ -340,26 +340,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     clearInterval(intervalId);
     result="";
     console.log("Stopped performing searches.");
-  }else if (message.type === "game-button") {
-    chrome.tabs.query({ url: "https://www.msn.com/en-us/shopping/*" }, function(tabs) {
-      if (tabs.length > 0) {
-        // Tab already exists, update it and get the tab ID
-        chrome.tabs.update(tabs[0].id, { active: true }, function(updatedTab) {
-          tabId = updatedTab.id;
-          console.log("Tab ID:", tabId);
-          // Continue with further logic using the tab ID
-        });
-        console.log("Either URL is opened.");
-      } else {
-        // Tab doesn't exist, create a new one and get the tab ID
-        chrome.tabs.create({ url: "https://www.msn.com/en-us/shopping" }, function(createdTab) {
-          tabId = createdTab.id;
-          console.log("Tab ID:", tabId);
-          // Continue with further logic using the tab ID
-        });
-        console.log("Neither URL is opened.");
-      }
-    });
   }
 });
 

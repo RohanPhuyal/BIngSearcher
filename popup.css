@@ -1,6 +1,6 @@
 body {
   background-color: #15191d;
-  width: 225px;
+  width: 240px;
     font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
@@ -71,5 +71,17 @@ body {
   p{
     color: #a50000;
     font-size: 10px;
+  }
+  .check{
+    font-size: 14px; 
+  }
+  .check input[type=number] {
+    padding: 2px;
+    display: inline-block;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    width: 30px; /* Adjust the width to your desired value */
   }
   

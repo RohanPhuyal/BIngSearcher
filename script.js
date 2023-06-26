@@ -1,110 +1,201 @@
-(function () {
-    var selectButton = null;
-    var selectExists = null;
+// This script can do multiple things... by default it does points 1, 2, 3, 4 and 5 listed below;
+// 1. Authentication checks, Have to make sure you're getting those sweet points :)
+// 2. Brings the Shopping Game to the top of the page
+// 3. Forces the game to only have one answer option
+// 4. Modifies countdown timer to 0 seconds
+// 5. Updates visible user balance whenever points are awarded ( not sure why Microsoft didn't include this anyway... )
+// 6. Automatically load next game instantly, skipping the 'Play Again' button + countdown timer ( needs to be enabled below! )
 
-    var msnShoppingGamePane2 = document.querySelector("shopping-page-base")
-        ?.shadowRoot.querySelector("shopping-homepage")
-        ?.shadowRoot.querySelector("msft-feed-layout")
-        ?.shadowRoot.querySelector("msn-shopping-game-pane");
+// Change this variable to 'true' to bring the Shopping Game to the top of the page.
+var switchAreaSlot = true;
 
-    var shoppingGame = document.querySelector("shopping-page-base")
+// Change this variable to 'true' to skip authentication check.
+var skipAuthCheck = false;
+
+// Change this variable to 'true' to update visible user balance whenever points are awarded. ( 'skipAuthCheck' MUST be 'false' )
+var autoUpdateRewardsBalance = true;
+
+// Change this variable to 'true' to skip the 'Play Again' button and countdown timer. ( a bit overpowered )
+var autoLoadNextGame = false;
+
+// Change this variable to modify the countdown timer. ( it's in seconds )
+var newGameCountdownTime = 0;
+
+
+// Basic query selectors to find 'msft-feed-layout', 'msn-shopping-game-pane' and 'ms-rewards' elements.
+var msftFeedLayout = document.querySelector("shopping-page-base")
+    ?.shadowRoot.querySelector("shopping-homepage")
+    ?.shadowRoot.querySelector("msft-feed-layout");
+ var playAgain=document.querySelector("shopping-page-base")
+  ?.shadowRoot.querySelector("shopping-homepage")
+  ?.shadowRoot.querySelector("msft-feed-layout")
+  ?.shadowRoot.querySelector("msn-shopping-game-pane")
+  ?.shadowRoot.querySelector(".shopping-game-pane-container")
+  ?.getElementsByClassName("game-panel-container")[0]
+  ?.getElementsByClassName("game-panel-header-2")[0]
+  ?.getElementsByClassName("game-panel-button")[0];
+
+
+var msnShoppingGamePane = msftFeedLayout?.shadowRoot.querySelector("msn-shopping-game-pane");
+
+var msRewards = document.querySelector("shopping-page-base")
+    ?.shadowRoot.querySelector("common-header")
+    ?.shadowRoot.querySelector("msn-verticals-header")
+    ?.shadowRoot.querySelector("fluent-design-system-provider")
+    ?.querySelector("ms-rewards");
+
+
+// Function to see if we are authenticated.
+async function rewardsConnectorAuthCheck(){
+    if(!msRewards) 
+    	return alert("'msRewards' not found, You may have ran the script too early?");
+
+    var isRewardsUserUndefined = (msRewards?.rewardPoints == undefined);
+    var tokenStorage = localStorage.getItem("1s-tokens");
+    if(isRewardsUserUndefined){
+    	if(tokenStorage){
+            alert("You're semi-authenticated, The page will now reload.\nYou will need to re-run the script when the page has reloaded.");
+			return document.location.reload();
+		}
+
+		// Authentication
+        setTimeout(async () =>{
+			document.body.innerHTML = "<div style='margin: 10px;'><span>You're unauthenticated! A popup should appear.<br>When you login you will need to re-run the script when the page has reloaded.</span></div>";
+        }, 500);
+		msnShoppingGamePane.signInState = 3;
+		await msnShoppingGamePane.signIn();
+    	await msnShoppingGamePane.fetchSignInState();
+        setTimeout(() => document.location.href = 'https://www.msn.com/shopping?ocid=windirect', 2000);
+    }
+    else {
+		if(tokenStorage){
+			window.userAccessToken = JSON.parse(tokenStorage).accessToken;
+			return true;
+		}
+		else {
+			alert("You're authenticated but unable to find '1s-tokens', The page will now reload.\nYou will need to re-run the script when the page has reloaded.");
+			return document.location.reload();
+		}
+	}
+}
+
+// Function that modifies the game.
+function modifyGame(){
+    // Check if the shopping game was found.
+    if(msnShoppingGamePane != null)
+    {
+		// Switches msnShoppingGamePane slot with slot2, bringing it to the top of the page.
+		if(switchAreaSlot){
+			if(msnShoppingGamePane.style.gridArea != "slot2"){
+				msftFeedLayout.shadowRoot.children[1].style.gridArea = msnShoppingGamePane.style.gridArea;
+				msnShoppingGamePane.style.gridArea = "slot2";
+			}
+		}
+
+		// Override their 'reportRewardsActivity' function with our own function for better point tracking.
+		if(autoUpdateRewardsBalance){
+			var rewardsBalanceElement;
+			msnShoppingGamePane.reportRewardsActivity = async function(retryCount = 2){
+				if(!rewardsBalanceElement)
+					rewardsBalanceElement = msRewards?.shadowRoot?.querySelector("fluent-button")?.querySelector("span")?.querySelector("div");    
+				
+				var retryOnFail = function(){
+					if(retryCount == 0) 
+						alert("Failed reporting activity, You didn't get any points.");
+					else 
+						setTimeout(() => msnShoppingGamePane.reportRewardsActivity(retryCount-1), 333);
+				}
+			
+				if(msRewards != null && autoUpdateRewardsBalance && rewardsBalanceElement && window.userAccessToken){
+					await fetch("https://assets.msn.com/service/news/feed/segments/shopping?ocid=shopping-shophp-Peregrine&apikey=Xr2pbC1j5NMUwFF5YHTlhDDkcftEafmPoVP3pfA5eZ&timeOut=10000&cm=" + MeControl.Config.mkt.toLowerCase() + "&scn=MSNRPSAuth&$select=rewards|reportactivity|guessinggame&$filter=~5000&t=" + Date.now().toString(),{
+						method: "GET",
+						cache: "no-store",
+						headers: {'Authorization': `Bearer ${window.userAccessToken}`}
+					}).then(async (response) =>{
+						if(response.status == 200){
+							var reportActivityResponse = await response.json();    
+							msnShoppingGamePane._rewardsBalance = JSON.parse(reportActivityResponse[0].data).Balance;
+							rewardsBalanceElement.textContent = `\n${msnShoppingGamePane._rewardsBalance}\n\n`;
+						}
+						else retryOnFail();
+					}).catch(() => {
+						retryOnFail();
+					});
+				}
+			};
+		}
+		
+		// Modify the game settings countdown timer for new games. 
+		msnShoppingGamePane.gameSettings.newGameCountdown = newGameCountdownTime;
+		
+        // Override their 'getGameResult' function with our own function which modifies the next game.
+        msnShoppingGamePane.getGameResult = function(e) 
+        {
+            // Make sure a product card is selected or if 'e' is '-1' to reset the game.
+            if (e === msnShoppingGamePane.selectedCardIndex)
+            {
+                // Modifies 'nextRoundShoppingEntities' to only contain 1 product.
+                msnShoppingGamePane.nextRoundShoppingEntities = [msnShoppingGamePane.nextRoundShoppingEntities[0]];
+            
+                // Remove the 10 daily limit. ( still limited to 100 points daily )
+                localStorage.removeItem("gamesPerDay");
+                msnShoppingGamePane.dailyLimitReached = false;
+                if(msnShoppingGamePane.leaderboardRecord)
+                    msnShoppingGamePane.leaderboardRecord.dailyGuessingGamesPlayed = 0;
+	 
+                // This does multiple things...
+                // Calls 'resetGame()' if 'e' is '-1'.
+                // Checks if the game was won.
+                // If the game was won it also checks if 'autoLoadNextGame' is 'true' and starts the next game if so.
+                return e === -1 ? msnShoppingGamePane.resetGame() : msnShoppingGamePane.gameState === "win" ? (autoLoadNextGame ? msnShoppingGamePane.startNextGame() : "win") : "lose";
+            }
+        };
+
+        //Calls the overridden 'getGameResult' function with the args '-1' to execute our code and reset the game.
+        msnShoppingGamePane.selectedCardIndex = -1;
+        msnShoppingGamePane.getGameResult(-1);
+    }
+    else alert("Unable to locate the shopping game!");
+}
+
+
+// This is the start...
+if(skipAuthCheck || await rewardsConnectorAuthCheck()){
+    modifyGame();
+}
+async function playAgainB(){
+    var playAgain=document.querySelector("shopping-page-base")
+  ?.shadowRoot.querySelector("shopping-homepage")
+  ?.shadowRoot.querySelector("msft-feed-layout")
+  ?.shadowRoot.querySelector("msn-shopping-game-pane")
+  ?.shadowRoot.querySelector(".shopping-game-pane-container")
+  ?.getElementsByClassName("game-panel-container")[0]
+  ?.getElementsByClassName("game-panel-header-2")[0]
+  ?.getElementsByClassName("game-panel-button")[0];
+  console.log(playAgain);
+  if(playAgain){
+    playAgain.click();
+  }
+  else{
+    return;
+  }
+  }
+  async function selectAuto(){
+	var selectButton = document.querySelector("shopping-page-base")
         ?.shadowRoot.querySelector("shopping-homepage")
         ?.shadowRoot.querySelector("msft-feed-layout")
         ?.shadowRoot.querySelector("msn-shopping-game-pane")
-        ?.shadowRoot.querySelector("msft-stripe");
-
-    function getObjectIndexFromArray(objects, id) {
-        for (let i = 0; i < objects.length; i++) {
-            if (objects[i].id === id) {
-                return i
-            }
-        }
-        return -1
-    }
-    function getLowestPriceItemID(priceMap) {
-        var lowestPriceItemID;
-        var currLowestPrice = Infinity;
-        for (const [itemID, item] of Object.entries(priceMap)) {
-            let price = parseFloat(item.price.substring(1));
-            if (currLowestPrice > price) {
-                lowestPriceItemID = itemID; currLowestPrice = price
-            }
-        }
-        return lowestPriceItemID
-    }
-
-    function highlightItems(correctIndex, items) {
-        for (let i = 0; i < items.length; i++) {
-            if (i == correctIndex) {
-                selectButton = shoppingGame.getElementsByClassName("shopping-game-card-outline")[correctIndex]
-                    ?.querySelector("fluent-card")
-                    ?.querySelector("msn-shopping-card")
-                    .getElementsByClassName("shopping-select-overlay-button")[0];
-                items[i].style.borderColor = "red";
-
-            }
-             else {
-                 items[i].style.borderColor = ""; items[i].style.display = "none"; 
-                } 
-        }
-    }
-    var lowestPriceItemID = getLowestPriceItemID(msnShoppingGamePane2.originalPricesbyId);
-        var itemIndex = getObjectIndexFromArray(msnShoppingGamePane2.displayedShoppingEntities, lowestPriceItemID);
-        console.log("Coeeect Index: "+itemIndex);
-        highlightItems(itemIndex, shoppingGame.getElementsByClassName("shopping-game-card-outline"));
-    function refreshGame() {
-        var lowestPriceItemID = getLowestPriceItemID(msnShoppingGamePane2.originalPricesbyId);
-        var itemIndex = getObjectIndexFromArray(msnShoppingGamePane2.displayedShoppingEntities, lowestPriceItemID);
-        console.log("Coeeect Index: "+itemIndex);
-        highlightItems(itemIndex, shoppingGame.getElementsByClassName("shopping-game-card-outline"));
-        if (selectButton != null) {
-                    console.log("SEL Button received" + selectButton);
-                    setTimeout(selectButtonCLick, 1000);
-                } else {
-                    console.log("Select Button Null");
-                }
-        const msnShoppingGamePane = document.querySelector("shopping-page-base")
-        ?.shadowRoot.querySelector("shopping-homepage")
-        ?.shadowRoot.querySelector("msft-feed-layout")
-        ?.shadowRoot.querySelector("msn-shopping-game-pane");
-        if (msnShoppingGamePane.getAttribute('gamestate')=='win'||msnShoppingGamePane.getAttribute('gamestate')=='idle') {
-            msnShoppingGamePane.setAttribute('gamestate', 'active');
-            msnShoppingGamePane.resetGame();
-        }
-    }
-    function selectButtonCLick() {
-        selectButton.click();
-    }
-    refreshGame();
-    msnShoppingGamePane2.addEventListener('click', function (event) {
-        console.log("MOUSE");
-        refreshGame();
-    });
-
-    var fixIntervalId;
-    function executeFixFunction() {
-        selectExists = document.querySelector("shopping-page-base")
-            ?.shadowRoot.querySelector("shopping-homepage")
-            ?.shadowRoot.querySelector("msft-feed-layout")
-            ?.shadowRoot.querySelector("msn-shopping-game-pane").getAttribute("gamestate");
-        console.log("Execute Fix Function: " + selectExists);
-        if (selectExists == 'win' || selectExists == 'idle' || selectExists == 'active' || selectExists == 'lose') {
-            refreshGame();
-        }
-    }
-
-    function startFixExecution() {
-        console.log("Start Fix Function");
-        // executeFixFunction();
-        fixIntervalId = setInterval(function () {
-            executeFixFunction();
-        }, 1000);
-    }
-    startFixExecution();
-    function stopFixExecution() {
-        //Not Yet Implemented
-        // Clear the interval
-        clearInterval(fixIntervalId);
-    }
-
-})();
+        ?.shadowRoot.querySelector("msft-stripe")
+        ?.querySelector("fluent-card")
+        ?.querySelector("msn-shopping-card").getElementsByClassName("shopping-select-overlay-button")[0];
+		if(selectButton){
+			selectButton.click();
+		}else{
+			return;
+		}
+  }
+  var playAgainInterval;
+  playAgainInterval = setInterval(async function () {
+   await playAgainB();
+   await selectAuto();
+  }, 1000);
