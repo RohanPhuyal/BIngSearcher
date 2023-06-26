@@ -7,6 +7,14 @@ var result="";
 var activeTabId = null;
 var searchUrl;
 var stopSearch = false;
+var randomTime=1000;
+
+async function randomTimeB(){
+  const possibleValues = [500, 1000, 1500, 2000];
+  const randomIndex = Math.floor(Math.random() * possibleValues.length);
+  const newTime = possibleValues[randomIndex];
+  randomTime = newTime;
+}
 
 function modeSearch(numSearchesD,numSearchesM, searchType, searchGen){
   if (searchType === "desktop") {
@@ -123,10 +131,11 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
     //   });
     // } 
     if (activeTabId) {
+      await randomTimeB();
+      await delay(randomTime);
       // Update tab URL
       chrome.tabs.update(activeTabId, { url: url }, async function (tab) {
         console.log("Searching for: " + searchTerm + " in " + searchType);
-
         // Wait for the tab to be fully loaded
         await new Promise((resolve) => {
           // Listen for tab load completion
