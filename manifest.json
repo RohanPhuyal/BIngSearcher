@@ -1,6 +1,6 @@
 {
   "name": "Bing Searcher",
-  "version": "8.0",
+  "version": "8.1",
   "manifest_version": 2,
   "description": "Perform multiple random searches on Bing.com for Microsoft Rewards",
   "icons": {
@@ -33,9 +33,7 @@
     }
   ],
   "web_accessible_resources": [
-    "script.js",
-    "gamefix.js",
-    "gamemanual.js"
+    "gamefix.js"
 ],
   "background": {
     "scripts": ["background.js"],
