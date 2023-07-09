@@ -1,6 +1,6 @@
 {
   "name": "Bing Searcher",
-  "version": "8.1",
+  "version": "8.2",
   "manifest_version": 2,
   "description": "Perform multiple random searches on Bing.com for Microsoft Rewards",
   "icons": {
