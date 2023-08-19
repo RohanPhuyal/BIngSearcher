@@ -1,6 +1,6 @@
 var intervalId;
 var desktopUserAgent = navigator.userAgent;
-var mobileUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1";
+var mobileUserAgent = "Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36";
 // var mobileUserAgent = "Mozilla/5.0 (Linux; Android 10; SM-G970F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Mobile Safari/537.36";
 // var mobileUserAgent = "Mozilla/5.0 (Linux; {Android Version}; {Build Tag etc.}) AppleWebKit/{WebKit Rev} (KHTML, like Gecko) Chrome/{Chrome Rev} Mobile Safari/{WebKit Rev}";
 var userAgent = navigator.userAgent;
@@ -11,7 +11,7 @@ var stopSearch = false;
 var randomTime=1000;
 
 async function randomTimeB(){
-  const possibleValues = [500, 1000, 1500, 2000];
+  const possibleValues = [1123, 2765, 3276, 3543];
   const randomIndex = Math.floor(Math.random() * possibleValues.length);
   const newTime = possibleValues[randomIndex];
   randomTime = newTime;

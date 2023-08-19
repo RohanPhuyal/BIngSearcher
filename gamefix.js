@@ -1,5 +1,5 @@
 // Change this variable to 'true' to bring the Shopping Game to the top of the page.
-var switchAreaSlot = true;
+var switchAreaSlot = false;
 
 // Change this variable to 'true' to show the custom game counter.
 var showCustomGameCounter = true;
@@ -158,7 +158,7 @@ async function rewardsConnectorAuthCheck(){
     var tokenStorage = localStorage.getItem("1s-tokens");
 	if(tokenStorage || accessToken){
 		window.userAccessToken = (accessToken ? accessToken : JSON.parse(tokenStorage).accessToken);
-		msnShoppingGamePane.signInState = 0;
+		msnShoppingGamePane.signInState = 1;
 		return true;
 	}
 	else
