@@ -37,14 +37,38 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     }
 
-    // Send message to background script to start searches
-    chrome.runtime.sendMessage({
-      type: "start-searches",
-      numSearchesD: numSearchesD,
-      numSearchesM: numSearchesM,
-      searchType: searchType,
-      searchGen: searchGen,
+    chrome.storage.sync.get("isSearching", function (data) {
+      if(data.isSearching=== "undefined"){
+        chrome.storage.sync.set({ isSearching: true });
+      }
     });
+
+    chrome.storage.sync.get("isSearching", function (data) {
+      if (data.isSearching === true) {
+        console.log("TERMINATING SEARCH");
+        return;
+      } else {
+        console.log("SEARCHING NOW");
+        chrome.storage.sync.set({ isSearching: true });
+        // Send message to background script to start searches
+        chrome.runtime.sendMessage({
+          type: "start-searches",
+          numSearchesD: numSearchesD,
+          numSearchesM: numSearchesM,
+          searchType: searchType,
+          searchGen: searchGen,
+        });
+      }
+    });
+
+    // // Send message to background script to start searches
+    // chrome.runtime.sendMessage({
+    //   type: "start-searches",
+    //   numSearchesD: numSearchesD,
+    //   numSearchesM: numSearchesM,
+    //   searchType: searchType,
+    //   searchGen: searchGen,
+    // });
 
     // Store the interval ID so that it can be cleared later
     intervalId = setInterval(function () {

@@ -26,6 +26,7 @@ function modeSearch(numSearchesD,numSearchesM, searchType, searchGen){
     desktopMobileSearch(numSearchesD,numSearchesM,searchType,searchGen);
   }
    else {
+    chrome.storage.sync.set({ isSearching: false });
     console.error("Invalid search type: " + searchType);
     return;
   }
@@ -49,6 +50,7 @@ async function desktopMobileSearch(numSearchesD, numSearchesM, searchType, searc
 
     // await delay(numSearchesD * 1000);
   } else {
+    chrome.storage.sync.set({ isSearching: false });
     console.error("Invalid search type: " + searchType);
     return;
   }
@@ -60,6 +62,7 @@ async function desktopSearch(numSearchesD,numSearchesM,searchType,searchGen) {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = desktopUserAgent;
   } else {
+    chrome.storage.sync.set({ isSearching: false });
     console.error("Invalid search type: " + searchType);
     return;
   }
@@ -71,6 +74,7 @@ async function mobileSearch(numSearchesD,numSearchesM,searchType, searchGen) {
     searchUrl = "https://www.bing.com/search?q=";
     userAgent = mobileUserAgent;
   } else {
+    chrome.storage.sync.set({ isSearching: false });
     console.error("Invalid search type: " + searchType);
     return;
   }
@@ -82,6 +86,7 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
   var prevSearches = [];
   var numSearches=0 ;
   result="";
+
   if(searchType==="desktop" ||searchType==="desktopD"){
     numSearches = numSearchesD;
   }else if(searchType==="mobile"||searchType==="mobileM"){
@@ -104,6 +109,8 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
     }
 
     if (stopSearch) {
+      chrome.storage.sync.set({ isSearching: false });
+      searchCount=0;
       result = "";
       if (searchType === "mobile"||searchType==="mobileM") {
         userAgent = desktopUserAgent;
@@ -121,7 +128,7 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
     }
     prevSearches.push(searchTerm);
 
-    var url = searchUrl + encodeURIComponent(searchTerm);
+    var url = searchUrl + encodeURIComponent(searchTerm) + "&cvid=83a6c35273834d10b4d9ef916d6c76f0&aqs=edge..69i57.1397j0j4&FORM=ANAB01&PC=U531";
 
     // if (activeTabId) {
     //   await new Promise((resolve) => {
@@ -334,18 +341,26 @@ var tabId=null;
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   
   if (message.type === "start-searches") {
+    chrome.storage.sync.get("isSearching", function (data) {
+      console.log("TESTING isSEARCHING"+data.isSearching);
+    });
+    
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs.length > 0) {
         activeTabId = tabs[0].id; // Store the tab ID of the active tab
         // performSearches(message.numSearches, message.searchType, message.searchGen);
       } else {
+        chrome.storage.sync.set({ isSearching: false });
         console.error("No active tab found.");
+        
       }
     });
     stopSearch=false;
     modeSearch(message.numSearchesD,message.numSearchesM, message.searchType, message.searchGen);
   } else if (message.type === "stop-searches") {
+    chrome.storage.sync.set({ isSearching: false });
     stopSearch = true;
+    searchCount=0;
     userAgent = desktopUserAgent;
     clearInterval(intervalId);
     result="";
