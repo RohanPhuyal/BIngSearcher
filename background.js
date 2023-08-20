@@ -172,6 +172,7 @@ async function actualSearch(numSearchesD,numSearchesM, searchType, searchGen) {
       });
     }
     if(searchCount >= numSearches){
+      chrome.storage.sync.set({ isSearching: false });
       result="";
       userAgent = desktopUserAgent;
       clearInterval(intervalId);
