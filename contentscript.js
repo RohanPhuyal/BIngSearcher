@@ -6,7 +6,7 @@
 function gameFix() {
     var scroll = document.querySelector("shopping-page-base")
     ?.shadowRoot.querySelector("shopping-homepage")
-    ?.shadowRoot.querySelector("msft-feed-layout")
+    ?.shadowRoot.querySelector("cs-feed-layout")
     ?.shadowRoot.querySelector("msn-shopping-game-pane");
     if(scroll){
       scroll.scrollIntoView({behavior: 'smooth'});
